@@ -1,0 +1,9 @@
+Infrasturcture as code IAC is the managing and prvisioning of infrastructure through code instead of through manual processes.
+Some of the tools listed below which falls under IAC
+
+terraform
+aws cloudformation
+puppet 
+chef
+ansible
+saltstack
