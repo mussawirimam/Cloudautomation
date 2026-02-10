@@ -1,0 +1,66 @@
+Infrasturcture as code IAC is the managing and prvisioning of infrastructure through code instead of through manual processes.
+Some of the tools listed below which falls under IAC
+
+terraform
+aws cloudformation
+puppet 
+chef
+ansible
+saltstack
+
+Key Features of Terraform:
+Execution Plans
+Resource Graph
+Change automation
+
+INSTALLATION ON ARM64 UBUNTU:
+-----------------------------
+official documentation: https://developer.hashicorp.com/terraform/install#linux
+https://releases.hashicorp.com
+
+sudo apt update
+sudo apt install -y gnupg software-properties-common curl
+
+curl -fsSL https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update
+sudo apt install terraform
+
+OR MANUAL INSTALLATION
+wget https://releases.hashicorp.com/terraform/1.0.10/terraform_1.0.10_linux_arm64.zip
+sudo apt install -y unzip
+unzip terraform_1.0.10_linux_arm64.zip
+sudo mv terraform /usr/local/bin/
+sudo chmod +x /usr/local/bin/terraform
+
+INSTALLATION AWS CLI ON ARM64 UBUNTU TO CONFIGURE AWS CREDENTIALS TO RUN TERRAFORM API CALLS:
+------------------------------------------------------------------------------
+curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+1. Download AWS CLI v2 for ARM64
+curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
+2. Unzip
+sudo apt update
+sudo apt install -y unzip
+unzip awscliv2.zip
+3. Install to proper system paths
+sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+This places:
+Binary → /usr/local/bin/aws
+Files → /usr/local/aws-cli
+No PATH variable needed (same reason as Terraform).
+4. Verify
+aws --version
+uname -m
+You should see:
+aws-cli/2.x.x Python/... Linux/aarch64
+aarch64
+5. Configure credentials
+aws configure
+
+
