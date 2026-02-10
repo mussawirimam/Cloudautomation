@@ -64,3 +64,71 @@ aarch64
 aws configure
 
 
+NOW WHAT? 
+----------
+TERRAFORM ACCESS MODEL — STUDY NOTE
+-----------------------------------
+
+CORE IDEA
+Terraform does NOT own your cloud account.
+Terraform is a CLIENT that talks to your cloud APIs.
+
+It creates/updates/deletes resources by acting as an identity in your account.
+
+
+WHY TERRAFORM NEEDS ACCESS
+- Terraform makes a plan.
+- To apply the plan, it must authenticate to the cloud.
+- It performs API calls AS a user/service account.
+
+
+BEST PRACTICE — DEDICATED TERRAFORM IDENTITY
+
+Do NOT use your personal login.
+
+Terraform is automation → use a machine identity.
+
+Benefits:
+- Security
+- Audit logs show "Terraform did this"
+- Follows least privilege principle
+
+
+WHAT YOU CREATE
+
++---------------------------+----------------------------------+
+| Component                 | Purpose                          |
++---------------------------+----------------------------------+
+| IAM User / Service Acct  | Identity Terraform will use      |
+| Access Keys / Creds      | Used by Terraform to login      |
+| IAM Policy / Role        | What Terraform is allowed to do |
++---------------------------+----------------------------------+
+
+
+PRINCIPLE — LEAST PRIVILEGE
+
+Give Terraform ONLY the permissions it needs.
+
+Think:
+Terraform = robot employee with a limited badge
+
+
+FLOW
+
+   [Terraform]
+        |
+        v
+[Uses IAM Identity / Service Account]
+        |
+        v
+[Calls Cloud Provider API]
+        |
+        v
+[Resources get created in your account]
+
+
+MENTAL MODEL
+
+Terraform --> IAM Identity --> Cloud API --> Infrastructure
+
+
