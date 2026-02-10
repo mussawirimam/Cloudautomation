@@ -14,7 +14,7 @@ Resource Graph
 Change automation
 
 INSTALLATION ON ARM64 UBUNTU:
------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 official documentation: https://developer.hashicorp.com/terraform/install#linux
 https://releases.hashicorp.com
 
@@ -40,7 +40,7 @@ sudo mv terraform /usr/local/bin/
 sudo chmod +x /usr/local/bin/terraform
 
 INSTALLATION AWS CLI ON ARM64 UBUNTU TO CONFIGURE AWS CREDENTIALS TO RUN TERRAFORM API CALLS:
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
 1. Download AWS CLI v2 for ARM64
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
@@ -67,7 +67,7 @@ aws configure
 NOW WHAT? 
 ----------
 TERRAFORM ACCESS MODEL — STUDY NOTE
------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 CORE IDEA
 Terraform does NOT own your cloud account.
@@ -131,4 +131,106 @@ MENTAL MODEL
 
 Terraform --> IAM Identity --> Cloud API --> Infrastructure
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+TERRAFORM WORKFLOW (ASCII)
+
+FILES YOU WRITE
+----------------
+main.tf   variables.tf   outputs.tf   providers.tf
+
+
+STEP 1 — INIT
+--------------
+terraform init
+
+[Downloads provider plugins]
+[Sets up backend for state]
+[Prepares working directory]
+
+
+STEP 2 — VALIDATE (optional but good)
+-------------------------------------
+terraform validate
+
+[Checks syntax and structure of .tf files]
+
+
+STEP 3 — PLAN
+--------------
+terraform plan
+
+        Your .tf code
+             |
+             v
+      [Current terraform.tfstate]
+             |
+             v
+     [Queries real cloud resources]
+             |
+             v
+   Shows execution plan (diff)
+
+Output:
++ create
+~ update
+- destroy
+
+
+STEP 4 — APPLY
+---------------
+terraform apply
+
+        Plan
+         |
+         v
+ [Uses IAM credentials]
+         |
+         v
+ [Calls Cloud Provider APIs]
+         |
+         v
+[Creates/updates resources]
+
+State file is UPDATED
+
+
+STEP 5 — STATE
+---------------
+terraform.tfstate
+
+Tracks what Terraform created and its real IDs in the cloud.
+
+
+STEP 6 — CHANGE SOMETHING
+--------------------------
+Edit .tf files → repeat PLAN → APPLY
+
+
+STEP 7 — DESTROY (if needed)
+-----------------------------
+terraform destroy
+
+Reads state → deletes everything it created.
+
+
+FULL FLOW
+
+ .tf files
+     |
+     v
+terraform init
+     |
+     v
+terraform plan  ---> compares ---> state + real cloud
+     |
+     v
+terraform apply ---> calls cloud API
+     |
+     v
+terraform.tfstate updated
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+TF SYNTAX
 
