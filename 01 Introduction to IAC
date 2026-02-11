@@ -232,5 +232,17 @@ terraform.tfstate updated
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
-TF SYNTAX
+TF SYNTAX:
 
+### we have different providers and provider plugins
+### provider plugins have the libraries of all the confiugrations that the terraform uses.
+
+resource "aws_vpc" "myvpc" {
+  cidr_block = var.base_cidr_block
+}
+
+<BLOCK TYPE> "<BLOCK LABEL>" "<BLOCK LABEL>" {
+  # Block body
+
+  <IDENTIFIER> = <EXPRESSION>   # Argument
+}
