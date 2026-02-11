@@ -1,0 +1,40 @@
+1. first setup the environment with Terraform and aws-cli 
+What are we going to see first: 
+- you should understand the workflow 
+- you should understan the provider plugin
+- what is the TF registry 
+- where are the registries located 
+- referring to the TF documentation
+- how do we get started for the TF configuration and the modules
+- what is the workflow
+- etc
+
+Once we are comfortable with the concepts above, then we will for the aws side of interacting from Terraform and aws resources etc. 
+|----------------------------------------------------------------------------------------------------------------------------------------------|
+TERRAFORM CONFIGURATION SYNTAX:
+
+Terraform configuration files are plain text files which ends with filename.tf as extension.
+HCL (Hashicorp Configuration Language)
+Terraform uses resource block to create Infrastructure (For AWS: EC2, VPC, S3 etc.,) services on respective provider like AWS, Azure, GCP etc., mentioned in provider block.
+hclresource "aws_vpc" "myvpc" {
+  cidr_block = var.base_cidr_block
+}
+
+<BLOCK TYPE> "<BLOCK LABEL>" "<BLOCK LABEL>" {
+  # Block body
+  <IDENTIFIER> = <EXPRESSION> # Argument
+}
+
+Key takeaways:
+
+Terraform files use the .tf extension
+Written in HCL (HashiCorp Configuration Language)
+Infrastructure is defined using resource blocks with the syntax: resource "<provider_resource_type>" "<local_name>" { ... }
+The generic block structure is: Block Type → Block Labels → Block Body containing Arguments (identifier = expression)
+
+
+|----------------------------------------------------------------------------------------------------------------------------------------------|
+What are the providers and provider plugins 
+https://developer.hashicorp.com/terraform/docs
+
+|----------------------------------------------------------------------------------------------------------------------------------------------|
