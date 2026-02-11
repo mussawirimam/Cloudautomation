@@ -1,0 +1,90 @@
+Assignment 1: The University Roster (Single Inheritance) 🎓
+You're building a system to manage people at a university. The most basic entity is a Person. A Student is a specific type of Person.
+
+Tasks:
+
+Create a base class called **Person** with:
+
+An __init__ method that takes name and age as arguments.
+
+A display() method that prints the person's name and age.
+
+Create a child class called **Student** that inherits from **Person**.
+
+Its __init__ method should take name, age, and a student_id. It must call the parent's __init__ method to handle the name and age.
+
+Override the display() method to print the student's name, age, and student ID.
+
+Create an instance of Student and call its display() method to show it works.
+
+Concepts to practice: Single Inheritance, Method Overriding, super().__init__().
+
+
+
+Assignment 2: Geometric Shapes (Hierarchical Inheritance) 📐
+You need to model different geometric shapes. All shapes have a name, but they calculate their area differently.
+
+Tasks:
+
+Create a base class **Shape** with:
+
+An __init__ method that takes the name of the shape.
+
+A placeholder method area() that does nothing but pass.
+
+Create two child classes, **Rectangle** and **Circle**, that both inherit from **Shape**.
+
+The **Rectangle** __init__ should take name, width, and height. It should implement the area() method to return width * height.
+
+The **Circle** __init__ should take name and radius. It should implement the area() method to return 3.14 * radius**2.
+
+Create instances of Rectangle and Circle and print their areas.
+
+Concepts to practice: Hierarchical Inheritance, Polymorphism (different area methods).
+
+Assignment 3: Advanced Electronics (Multilevel Inheritance) 💻
+Model the relationship between general electronics, computers, and specific types of computers like laptops.
+
+Tasks:
+
+Create a base class **Electronics** with a method power_on() that prints "Electronic device is ON".
+
+Create a child class **Computer** that inherits from **Electronics**. It should have a method run_os() that prints "Operating System is running".
+
+Create a grandchild class **Laptop** that inherits from **Computer**. It should have a method check_battery() that prints "Battery level is 85%".
+
+Create an instance of Laptop and call all three methods (power_on, run_os, and check_battery) to show the full chain of inheritance.
+
+Concepts to practice: Multilevel Inheritance, method chaining.
+
+Assignment 4: The Hybrid Engine (Multiple Inheritance) 🚗
+Design a class for a hybrid car that has features of both a gasoline car and an electric car.
+
+Tasks:
+
+Create a class **GasolineEngine** with a method fill_tank() that prints "Gasoline tank is full."
+
+Create another class **ElectricMotor** with a method charge_battery() that prints "Battery is fully charged."
+
+Create a child class **HybridCar** that inherits from both **GasolineEngine** and **ElectricMotor**.
+
+Create an instance of HybridCar and call both fill_tank() and charge_battery() on it.
+
+Concepts to practice: Multiple Inheritance, combining features from different classes.
+
+Challenge Project: The Dungeon Crawler (Hybrid Inheritance) ⚔️
+Create a set of classes for a simple text-based adventure game, combining multiple inheritance patterns.
+
+Tasks:
+
+Create a base class **Character** with attributes for name and health.
+
+Create two classes that inherit from **Character**: **Player** and **Enemy**. This is Hierarchical Inheritance.
+
+Create two "ability" classes that do not inherit from Character: **MageAbilities** (with a cast_spell() method) and **WarriorAbilities** (with a swing_sword() method).
+
+Create a final class, **WizardKnight**, that inherits from **Player**, **MageAbilities**, and **WarriorAbilities**. This uses Multiple Inheritance, creating a Hybrid structure.
+
+Instantiate a WizardKnight. It should have a name and health from Character/Player, and it should be able to cast_spell() and swing_sword(). Demonstrate that it can use all its abilities.
+
+Concepts to practice: Hybrid Inheritance, complex class design, Method Resolution Order (MRO).
