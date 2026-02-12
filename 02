@@ -34,7 +34,34 @@ The generic block structure is: Block Type → Block Labels → Block Body conta
 
 
 |----------------------------------------------------------------------------------------------------------------------------------------------|
-What are the providers and provider plugins 
+### one Note, keep track of the deprecation, for that reason try to maintain and stick to one version of Terraform. 
+DOCUMENTATION:
+OFFICIAL PAGE
 https://developer.hashicorp.com/terraform/docs
 
+REGISTRY
+https://registry.terraform.io/
+What are registries?
+contains multiple providers along with documentations
+
 |----------------------------------------------------------------------------------------------------------------------------------------------|
+LOCAL PROVIDER 
+---------------
+https://registry.terraform.io/providers/hashicorp/local/latest --> click on documentation --> click on Resources > click on local_file
+this registery is used to manage local resources, such as creating files etc
+
+you have to understnad what are resources? 
+whatever you creating using Terraform is a resource. 
+
+copy the example code from the documentation above.
+
+resource "local_file" "foo" {
+  content  = "foo!"
+  filename = "${path.module}/foo.bar"
+}
+
+#notice the above code has structure syntax like below:
+<BLOCK TYPE> "<BLOCK LABEL>" "<BLOCK LABEL>" {
+  # Block body
+  <IDENTIFIER> = <EXPRESSION> # Argument
+}
