@@ -66,3 +66,23 @@ resource "local_file" "foo" {
   <IDENTIFIER> = <EXPRESSION> # Argument
 }
 
+resource "local_file" "myfirstfile" { # <------------ is not a file name, its a Terraform reference name for the local_file resource.
+
+### so inside this what are the inputs that we need to give for that we need to refer to the DOCUMENTATION
+###  The required REQUIRED PARAMETERS are mandatory e.g in documentation it is filename in this local_file resource
+filename parameter is required
+content is optional, read other optional parameters from the docuemntations
+
+}
+
+resource "local_file" "myfirstfile" { # <------------ is not a file name, its a Terraform reference name for the local_file resource.
+  filename
+}
+### if you dont give the absolute path, it will create the file in the same location
+resource "local_file" "foo" {
+  filename  = "terraform_file.txt!"
+    content   = "This is a first file created by Terraform."
+}
+
+### UNDERSTANDING THE WORKFLOW
+what is the workflow
