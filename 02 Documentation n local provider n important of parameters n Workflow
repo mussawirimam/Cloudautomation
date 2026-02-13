@@ -473,3 +473,12 @@ local_file.myfirstfile: Destruction complete after 0s
 
 Destroy complete! Resources: 1 destroyed.
 root@terra:~/introduction# 
+
+my-first-terraform.tf  terraform.tfstate  terraform.tfstate.backup
+root@terra:~/introduction# 
+
+### we do not use tfstate or tfstatebackup files to recreate the resources, we use it as reference to re-create the resources. 
+### if you have multiple resources in main.tf file or multiple main.tf file in the folder example:
+### main1.tf main2.tf main3.tf, when you apply the terraform command, it will create the resources from all the file at the same time.
+### to target a specific file to be applied first of all it's not a good practice to create multiple file in the same location.
+### but if you want to target specific file then
