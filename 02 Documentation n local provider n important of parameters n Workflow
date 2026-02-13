@@ -88,6 +88,7 @@ filenames are the attriubte of the resource we are creating. All the attributes 
 |----------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### UNDERSTANDING THE WORKFLOW
+===============================
 # fmt (format) is option but plan is mandatory step
 # fmt brings it in alignment (beautify your code)
            +----------------+
@@ -143,6 +144,8 @@ resource "local_file" "myfirstfile" {
     content   = "This is a first file created by Terraform."
 }
 
+TERRAFORM INIT
+==============
 root@terra:~/introduction# terraform init
 Initializing the backend...
 Initializing provider plugins...
@@ -300,7 +303,8 @@ provider "registry.terraform.io/hashicorp/local" {
 }
 root@terra:~/introduction# 
 
-
+TERRAFORM FMT
+=============
 ### fmt beautifies your code
 root@terra:~/introduction# terraform fmt
 root@terra:~/introduction# 
@@ -324,6 +328,9 @@ resource "local_file" "myfirstfile" {
 }
 ...
 wq!
+
+TERRAFORM VALIDATE
+===================
 root@terra:~/introduction# terraform validate 
 ╷
 │ Error: Missing required argument
@@ -344,7 +351,8 @@ root@terra:~/introduction# terraform validate
 
 ### I fixed the file back
 
-
+TERRAFORM PLAN
+===============
 root@terra:~/introduction# terraform plan
 
 Terraform used the selected providers to generate the following execution plan.
@@ -376,6 +384,9 @@ Note: You didn't use the -out option to save this plan, so Terraform can't guara
 to take exactly these actions if you run "terraform apply" now.
 root@terra:~/introduction# 
 
+
+TERRAFORM APPLY
+================
 root@terra:~/introduction# terraform apply
 
 Terraform used the selected providers to generate the following execution plan.
@@ -417,5 +428,48 @@ root@terra:~/introduction# ls
  my-first-terraform.tf  'terraform_file.txt!'   terraform.tfstate
 root@terra:~/introduction# 
 root@terra:~/introduction# cat 'terraform_file.txt!' 
-This is a first file created by Terraform.root@terra:~/introduction# 
+This is a first file created by Terraform.
+root@terra:~/introduction# 
 
+### terraform.tfstate is very important to keep track all the resources that has been created from terraform.
+### we will learn to protect the state file by specifying where to be generated through configuring it.
+
+### TERRAFORM DESTROY
+======================
+root@terra:~/introduction# terraform destroy
+local_file.myfirstfile: Refreshing state... [id=c133f8b1adde00ab5d0f90679ae3a1c418094726]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile will be destroyed
+  - resource "local_file" "myfirstfile" {
+      - content              = "This is a first file created by Terraform." -> null
+      - content_base64sha256 = "L2IT5x8D+0h9D75NSNoCuymX3MErHWPoAozB1/sOlCY=" -> null
+      - content_base64sha512 = "bc5uBEZMBHyY3Ki7SJab9Qoxtue5vULS1ruMtcZMh75OA/uBS+I0KqIiCA85WotaLXfcqP6bs8RlkH4XfiedvA==" -> null
+      - content_md5          = "f78a49d1ff85608e881aba5ffd85caf3" -> null
+      - content_sha1         = "c133f8b1adde00ab5d0f90679ae3a1c418094726" -> null
+      - content_sha256       = "2f6213e71f03fb487d0fbe4d48da02bb2997dcc12b1d63e8028cc1d7fb0e9426" -> null
+      - content_sha512       = "6dce6e04464c047c98dca8bb48969bf50a31b6e7b9bd42d2d6bb8cb5c64c87be4e03fb814be2342aa222080f395a8b5a2d77dca8fe9bb3c465907e177e279dbc" -> null
+      - directory_permission = "0777" -> null
+      - file_permission      = "0777" -> null
+      - filename             = "terraform_file.txt!" -> null
+      - id                   = "c133f8b1adde00ab5d0f90679ae3a1c418094726" -> null
+    }
+
+Plan: 0 to add, 0 to change, 1 to destroy.
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+
+local_file.myfirstfile: Destroying... [id=c133f8b1adde00ab5d0f90679ae3a1c418094726]
+local_file.myfirstfile: Destruction complete after 0s
+
+Destroy complete! Resources: 1 destroyed.
+root@terra:~/introduction# 
