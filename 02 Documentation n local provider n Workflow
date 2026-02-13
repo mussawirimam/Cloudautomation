@@ -88,6 +88,39 @@ filenames are the attriubte of the resource we are creating. All the attributes 
 |----------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### UNDERSTANDING THE WORKFLOW
+# fmt (format) is option but plan is mandatory step
+# fmt brings it in alignment (beautify your code)
+           +----------------+
+           |      User      |
+           +----------------+
+                  |
+                  | Step 1
+                  v
+           +----------------+
+           | terraform init |
+           +----------------+
+            |       |       |
+            |Step 2 |Step 5 |
+            v       v       v
+   +----------------+   +----------------+
+   | terraform fmt  |   | terraform plan |
+   +----------------+   +----------------+
+            |Step 3        |Step 6
+            v             /    \
+   +----------------+   /      \
+   | terraform validate |        \
+   +----------------+           +------------------+
+            |Step 4                | terraform apply |
+            v                      +------------------+
+   +----------------+
+   | terraform plan |
+   +----------------+
+          |
+          v
+   +------------------+
+   | terraform destroy|
+   +------------------+
+
 ### what is the workflow?
 
 
@@ -266,3 +299,123 @@ provider "registry.terraform.io/hashicorp/local" {
   ]
 }
 root@terra:~/introduction# 
+
+
+### fmt beautifies your code
+root@terra:~/introduction# terraform fmt
+root@terra:~/introduction# 
+
+### validates the code. All the parameters that we are parsing are real parameters or not. You can check these parameters from the documentation for local_file
+root@terra:~/introduction# terraform validate 
+Success! The configuration is valid.
+
+root@terra:~/introduction# 
+
+### WILL GIVE YOU ERROR
+example if you change the parameter that isnt defined in the documentation it will give you an error for Argument
+### it is refered from the plugin, the plugin will have the definition from the documentations. (The plugin that was initiliazed at the terraform init) plugin which was downloaded
+root@terra:~/introduction# ls
+my-first-terraform.tf
+root@terra:~/introduction# vim my-first-terraform.tf 
+...
+resource "local_file" "myfirstfile" {
+  filenames = "terraform_file.txt!" <---------------------------
+  content  = "This is a first file created by Terraform."
+}
+...
+wq!
+root@terra:~/introduction# terraform validate 
+╷
+│ Error: Missing required argument
+│ 
+│   on my-first-terraform.tf line 10, in resource "local_file" "myfirstfile":
+│   10: resource "local_file" "myfirstfile" {
+│ 
+│ The argument "filename" is required, but no definition was found.
+╵
+╷
+│ Error: Unsupported argument
+│ 
+│   on my-first-terraform.tf line 11, in resource "local_file" "myfirstfile":
+│   11:   filenames = "terraform_file.txt!"
+│ 
+│ An argument named "filenames" is not expected here. Did you mean "filename"?
+╵
+
+### I fixed the file back
+
+
+root@terra:~/introduction# terraform plan
+
+Terraform used the selected providers to generate the following execution plan.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile will be created  ### <------------------- this is a terraform reference name
+  + resource "local_file" "myfirstfile" {
+      + content              = "This is a first file created by Terraform." ### <------------- content
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "terraform_file.txt!" ### <---------------- file
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+──────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee
+to take exactly these actions if you run "terraform apply" now.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# terraform apply
+
+Terraform used the selected providers to generate the following execution plan.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile will be created
+  + resource "local_file" "myfirstfile" {
+      + content              = "This is a first file created by Terraform."
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "terraform_file.txt!"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.myfirstfile: Creating...
+local_file.myfirstfile: Creation complete after 0s [id=c133f8b1adde00ab5d0f90679ae3a1c418094726]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# ls
+ my-first-terraform.tf  'terraform_file.txt!'   terraform.tfstate
+root@terra:~/introduction# 
+root@terra:~/introduction# cat 'terraform_file.txt!' 
+This is a first file created by Terraform.root@terra:~/introduction# 
+
