@@ -84,7 +84,8 @@ resource "local_file" "foo" {
     content   = "This is a first file created by Terraform."
 }
 
-filenames are the attriubte of the resource we are creating. All the attributes related to the resource wil be provided in the block.
+filenames are the attriubte of the resource we are creating. All the attributes related to the resource wil be provided in the block body.
 
 ### UNDERSTANDING THE WORKFLOW
 what is the workflow
+
