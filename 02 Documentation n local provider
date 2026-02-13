@@ -85,7 +85,184 @@ resource "local_file" "foo" {
 }
 
 filenames are the attriubte of the resource we are creating. All the attributes related to the resource wil be provided in the block body.
+|----------------------------------------------------------------------------------------------------------------------------------------------|
 
 ### UNDERSTANDING THE WORKFLOW
-what is the workflow
+### what is the workflow?
 
+
+
+root@terra:~# mkdir introduction
+root@terra:~# cd introduction
+root@terra:~/introduction#
+cat <<eod > my-first0terraform.tf
+terraform {
+  required_providers {
+    local = {
+      source = "hashicorp/local"
+      version = "2.5.2"
+    }
+  }
+}
+
+resource "local_file" "myfirstfile" {
+  filename  = "terraform_file.txt!"
+    content   = "This is a first file created by Terraform."
+}
+
+root@terra:~/introduction# terraform init
+Initializing the backend...
+Initializing provider plugins...
+- Finding hashicorp/local versions matching "2.5.2"...
+- Installing hashicorp/local v2.5.2...
+- Installed hashicorp/local v2.5.2 (signed by HashiCorp)
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+root@terra:~/introduction# 
+
+
+### when you type terraform init, it creates the hidden folder called .terraform
+root@terra:~/introduction# ls -al
+total 20
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwx------ 6 root root 4096 Feb 13 02:45 ..
+-rw-r--r-- 1 root root  256 Feb 13 02:48 my-first-terraform.tf
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .terraform
+-rw-r--r-- 1 root root 1181 Feb 13 02:51 .terraform.lock.hcl
+root@terra:~/introduction# ls -al .terraform
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 providers
+root@terra:~/introduction# ls -al .terraform
+.terraform/          .terraform.lock.hcl  
+root@terra:~/introduction# ls -al .terraform/providers/
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 registry.terraform.io
+root@terra:~/introduction# ls -al .terraform/providers/registry.terraform.io/
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 hashicorp
+root@terra:~/introduction# ls -al .terraform/providers/registry.terraform.io/hashicorp/
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 local
+root@terra:~/introduction# ls -al .terraform/providers/registry.terraform.io/hashicorp/local/
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 2.5.2
+root@terra:~/introduction# ls -al .terraform/providers/registry.terraform.io/hashicorp/local/2.5.2/
+total 12
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 ..
+drwxr-xr-x 2 root root 4096 Feb 13 02:51 linux_arm64
+root@terra:~/introduction# ls -al .terraform/providers/registry.terraform.io/hashicorp/local/2.5.2/linux_arm64/
+total 13472
+drwxr-xr-x 2 root root     4096 Feb 13 02:51 .
+drwxr-xr-x 3 root root     4096 Feb 13 02:51 ..
+-rw-r--r-- 1 root root    16761 Feb 13 02:51 LICENSE.txt
+-rwxr-xr-x 1 root root 13762712 Feb 13 02:51 terraform-provider-local_v2.5.2_x5
+root@terra:~/introduction# 
+
+### if you change the version now, it will fail the query if you apply terraform init. 
+
+root@terra:~/introduction# vim my-first-terraform.tf 
+...
+    local = {
+      source = "hashicorp/local"
+      version = "2.5.3"
+    }
+  }
+...
+wq! 
+
+root@terra:~/introduction# terraform init
+Initializing the backend...
+Initializing provider plugins...
+- Reusing previous version of hashicorp/local from the dependency lock file
+╷
+│ Error: Failed to query available provider packages
+│ 
+│ Could not retrieve the list of available versions for provider hashicorp/local: locked provider
+│ registry.terraform.io/hashicorp/local 2.5.2 does not match configured version constraint 2.5.3; must
+│ use terraform init -upgrade to allow selection of new versions
+│ 
+│ To see which modules are currently depending on hashicorp/local and what versions are specified, run
+│ the following command:
+│     terraform providers
+╵
+root@terra:~/introduction# 
+
+### if you want to upgrade then, you will have to run the command below
+### it will upgrade the terraform.lock.hcl file to version 2.5.3 from 2.5.2  
+
+  root@terra:~/introduction# terraform init -upgrade
+Initializing the backend...
+Initializing provider plugins...
+- Finding hashicorp/local versions matching "2.5.3"...
+- Installing hashicorp/local v2.5.3...
+- Installed hashicorp/local v2.5.3 (signed by HashiCorp)
+Terraform has made some changes to the provider dependency selections recorded
+in the .terraform.lock.hcl file. Review those changes and commit them to your
+version control system if they represent changes you intended to make.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+root@terra:~/introduction# 
+
+### as you can see after upgrading the version is 2.5.3 in the .terraform.lock.hcl  
+root@terra:~/introduction# ls -al 
+total 20
+drwxr-xr-x 3 root root 4096 Feb 13 03:02 .
+drwx------ 6 root root 4096 Feb 13 03:00 ..
+-rw-r--r-- 1 root root  256 Feb 13 03:00 my-first-terraform.tf
+drwxr-xr-x 3 root root 4096 Feb 13 02:51 .terraform
+-rw-r--r-- 1 root root 1181 Feb 13 03:02 .terraform.lock.hcl
+root@terra:~/introduction# cat .terraform.lock.hcl 
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/hashicorp/local" {
+  version     = "2.5.3"
+  constraints = "2.5.3"
+  hashes = [
+    "h1:836ukDqJMp3wnHO5XX1T4H14LcRhrrD8XxGh/WtqzCY=",
+    "zh:284d4b5b572eacd456e605e94372f740f6de27b71b4e1fd49b63745d8ecd4927",
+    "zh:40d9dfc9c549e406b5aab73c023aa485633c1b6b730c933d7bcc2fa67fd1ae6e",
+    "zh:6243509bb208656eb9dc17d3c525c89acdd27f08def427a0dce22d5db90a4c8b",
+    "zh:78d5eefdd9e494defcb3c68d282b8f96630502cac21d1ea161f53cfe9bb483b3",
+    "zh:885d85869f927853b6fe330e235cd03c337ac3b933b0d9ae827ec32fa1fdcdbf",
+    "zh:bab66af51039bdfcccf85b25fe562cbba2f54f6b3812202f4873ade834ec201d",
+    "zh:c505ff1bf9442a889ac7dca3ac05a8ee6f852e0118dd9a61796a2f6ff4837f09",
+    "zh:d36c0b5770841ddb6eaf0499ba3de48e5d4fc99f4829b6ab66b0fab59b1aaf4f",
+    "zh:ddb6a407c7f3ec63efb4dad5f948b54f7f4434ee1a2607a49680d494b1776fe1",
+    "zh:e0dafdd4500bec23d3ff221e3a9b60621c5273e5df867bc59ef6b7e41f5c91f6",
+    "zh:ece8742fd2882a8fc9d6efd20e2590010d43db386b920b2a9c220cfecc18de47",
+    "zh:f4c6b3eb8f39105004cf720e202f04f57e3578441cfb76ca27611139bc116a82",
+  ]
+}
+root@terra:~/introduction# 
