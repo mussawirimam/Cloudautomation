@@ -309,9 +309,18 @@ root@terra:~/introduction#
 |----------------------------------------------------------------------------------------------------------|
 VARIABLES
 ==========
-always try to create a variable when creating the resources!
+Q: What are the variables?
+A: variable is a label, which holds some value. 
+
+Note: always try to create a variable when creating the resources!
 If you arent doing that, it will be difficult to manage the code. 
 Example: if you have hardcoded a name at 20 different places, next time when you are changing that name, you will have to change that name 20 different times. But, if you have variabalized/parameterized it, you will have to change it only once. It's a best practice.
+
+What are the variable block?
+there are three essentials to give when coding. 
+1. what is the default value.
+2. type of the value.
+3. custom description.
 ============================================================
             TERRAFORM STUDY NOTE — VARIABLES
 ============================================================
@@ -444,3 +453,195 @@ Variables:
   Scalable infrastructure
   Professional Terraform design
 ============================================================
+
+
+--------------------------------------------------------------------------------------------------------------
+PRACTICAL:
+================
+
+VARIABLE BLOCK:
+===============
+BEFORE CHANGES
+--------------
+### before specifying/calling the variable into the actual resource
+resource "local_file" "myfirstfile" {
+  filename  = "terraform_file.txt!"
+    content   = "This is a first file created by Terraform. And my pet name is${random_pet.mypetname.id}"
+}
+resource "random_pet" "mypetname" {
+    length = 2
+    prefix = "MR"
+    separator = "."
+}
+
+variable "filename" {
+    default = "myfile.txt"
+    type = string
+    description = "Name of the file to create"
+}
+
+variable "file_content" {
+    default = "This is the first file created using terraform"
+    type = string
+    description = "The content of the file"
+}
+
+AFTER CHANGES
+--------------
+### after the variables have been called
+### resource
+cat <<'eof'>  my-first-terraform.tf
+resource "local_file" "myfirstfile" {
+  filename  = var.filename
+    content   = var.file_content
+}
+resource "random_pet" "mypetname" {
+    length = 2
+    prefix = "MR"
+    separator = "."
+}
+### variables
+variable "filename" {
+    default = "myfile.txt"
+    type = string
+    description = "Name of the file to create"
+}
+
+variable "file_content" {
+    default = "This is the first file created using terraform"
+    type = string
+    description = "The content of the file"
+}
+eof
+
+root@terra:~/introduction# terraform plan
+random_pet.mypetname: Refreshing state... [id=MR.relieved.beagle]
+local_file.myfirstfile: Refreshing state... [id=e6f2069a0c699d3288f411128be4ce00145a9981]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile must be replaced
+-/+ resource "local_file" "myfirstfile" {
+      ~ content              = "This is a first file created by Terraform. And my pet name isMR.relieved.beagle" -> "This is the first file created using terraform" # forces replacement
+      ~ content_base64sha256 = "7AW/LwrpKUcto06Ht2pf0JX/QoW8O1BG2OIVGA2NWhA=" -> (known after apply)
+      ~ content_base64sha512 = "DNl352/39eeOGOzVDjJRlkyr+6Dr9Z6aBe1TkTRG49vCkBJrKUQJ16fos6GM2lDqevLv74r4+PlOfQbb4SmSLw==" -> (known after apply)
+      ~ content_md5          = "8f1e9c9ef9c4718bc4f1db5db0fb3ccc" -> (known after apply)
+      ~ content_sha1         = "e6f2069a0c699d3288f411128be4ce00145a9981" -> (known after apply)
+      ~ content_sha256       = "ec05bf2f0ae929472da34e87b76a5fd095ff4285bc3b5046d8e215180d8d5a10" -> (known after apply)
+      ~ content_sha512       = "0cd977e76ff7f5e78e18ecd50e3251964cabfba0ebf59e9a05ed53913446e3dbc290126b294409d7a7e8b3a18cda50ea7af2efef8af8f8f94e7d06dbe129922f" -> (known after apply)
+      ~ filename             = "terraform_file.txt!" -> "myfile.txt" # forces replacement
+      ~ id                   = "e6f2069a0c699d3288f411128be4ce00145a9981" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if
+you run "terraform apply" now.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# terraform apply 
+local_file.myfirstfile: Refreshing state... [id=e6f2069a0c699d3288f411128be4ce00145a9981]
+random_pet.mypetname: Refreshing state... [id=MR.relieved.beagle]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile must be replaced
+-/+ resource "local_file" "myfirstfile" {
+      ~ content              = "This is a first file created by Terraform. And my pet name isMR.relieved.beagle" -> "This is the first file created using terraform" # forces replacement
+      ~ content_base64sha256 = "7AW/LwrpKUcto06Ht2pf0JX/QoW8O1BG2OIVGA2NWhA=" -> (known after apply)
+      ~ content_base64sha512 = "DNl352/39eeOGOzVDjJRlkyr+6Dr9Z6aBe1TkTRG49vCkBJrKUQJ16fos6GM2lDqevLv74r4+PlOfQbb4SmSLw==" -> (known after apply)
+      ~ content_md5          = "8f1e9c9ef9c4718bc4f1db5db0fb3ccc" -> (known after apply)
+      ~ content_sha1         = "e6f2069a0c699d3288f411128be4ce00145a9981" -> (known after apply)
+      ~ content_sha256       = "ec05bf2f0ae929472da34e87b76a5fd095ff4285bc3b5046d8e215180d8d5a10" -> (known after apply)
+      ~ content_sha512       = "0cd977e76ff7f5e78e18ecd50e3251964cabfba0ebf59e9a05ed53913446e3dbc290126b294409d7a7e8b3a18cda50ea7af2efef8af8f8f94e7d06dbe129922f" -> (known after apply)
+      ~ filename             = "terraform_file.txt!" -> "myfile.txt" # forces replacement
+      ~ id                   = "e6f2069a0c699d3288f411128be4ce00145a9981" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.myfirstfile: Destroying... [id=e6f2069a0c699d3288f411128be4ce00145a9981]
+local_file.myfirstfile: Destruction complete after 0s
+local_file.myfirstfile: Creating...
+local_file.myfirstfile: Creation complete after 0s [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# ls
+myfile.txt  my-first-terraform.tf  providers.tf  terraform.tfstate  terraform.tfstate.backup
+root@terra:~/introduction# cat my
+myfile.txt             my-first-terraform.tf  
+root@terra:~/introduction# cat myfile.txt 
+This is the first file created using terraform
+root@terra:~/introduction# 
+
+### NOTE: terraform will not plan if the variable value or type isnt specified. 
+### variables should be in specified file called variable.tf and not to be added in the main.tf files
+root@terra:~/introduction# ls
+ main.tf       'terraform_file.txt!'   terraform.tfstate.backup
+ providers.tf   terraform.tfstate      variables.tf
+root@terra:~/introduction# 
+
+
+
+
+OUTPUT BLOCK
+=============
+### output block will help you to print the output. 
+### for now we will add it to the same code but we will break these in seperate files. 
+
+### resource block
+resource "local_file" "myfirstfile" {
+  filename  = var.filename
+    content   = var.file_content
+}
+resource "random_pet" "mypetname" {
+    length = 2
+    prefix = "MR"
+    separator = "."
+}
+
+### output block
+output "my_pet_name"{
+    value = random_pet.mypetname.id
+}
+
+
+root@terra:~/introduction# terraform apply
+random_pet.mypetname: Refreshing state... [id=MR.relieved.beagle]
+local_file.myfirstfile: Refreshing state... [id=e6f2069a0c699d3288f411128be4ce00145a9981]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration and found no
+differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+my_pet_name = "MR.relieved.beagle"  #<----------------------
+root@terra:~/introduction# 
+
+### where the output will be used? there is a concept called module. There are two projects like vpc and vpc id needs to be refered into another project as input
+one state file 
+########## < put notes here explains at 21-5-2025 4714 > ###########
