@@ -36,10 +36,12 @@ The generic block structure is: Block Type → Block Labels → Block Body conta
 |----------------------------------------------------------------------------------------------------------------------------------------------|
 ### one Note, keep track of the deprecation, for that reason try to maintain and stick to one version of Terraform. 
 DOCUMENTATION:
+===============
 OFFICIAL PAGE
 https://developer.hashicorp.com/terraform/docs
 
 REGISTRY
+============
 https://registry.terraform.io/
 What are registries?
 contains multiple providers along with documentations

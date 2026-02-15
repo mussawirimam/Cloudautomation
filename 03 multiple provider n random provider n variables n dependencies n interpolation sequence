@@ -1,3 +1,55 @@
 Note:
-1. If you have multiple resources, example resource a resource B and there is no dependencies. The terraform will try to execute both at the same time.
-2. If there are dependency, that will go through sequence
+1. If you have multiple resources, example resource A, resource B and there is no dependencies. The terraform will try to execute code for both at the same time.
+2. If there are dependency of the resources, then terraform will go through sequence.
+
+RANDOM PROVIDER FROM THE REGISTRY
+=================================
+https://registry.terraform.io/providers/hashicorp/random/latest
+
+when working with any provider, there are required and optional input. You can use those through the 
+documentation that the provider comes with. 
+
+### added random provider
+root@terra:~/introduction# cat providers.tf 
+terraform {
+  required_providers {
+    local = {
+      source = "hashicorp/local"
+      version = "2.5.2"
+    }
+  }
+}
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.8.1"
+    }
+  }
+}
+
+### added the code
+resource "local_file" "myfirstfile" {
+  filename  = "terraform_file.txt!"
+    content   = "This is a first file created by Terraform."
+}
+resource "random_pet" "mypetname" {
+    length = 2
+    prefix = "MR"
+    separator = "."
+}
+
+### but it is giving me error when I do plan because any time we add a new provider, we need to initialize the terraform to download the plugins for the new provider for the code to work. 
+root@terra:~/introduction# terraform plan
+╷
+│ Error: Inconsistent dependency lock file
+│ 
+│ The following dependency selections recorded in the lock file are inconsistent with the current configuration:
+│   - provider registry.terraform.io/hashicorp/local: locked version selection 2.5.3 doesn't match the updated version constraints "2.5.2"
+│   - provider registry.terraform.io/hashicorp/random: required by this configuration but no version is selected
+│ 
+│ To update the locked dependency selections to match a changed configuration, run:
+│   terraform init -upgrade
+╵
+root@terra:~/introduction# 
+
