@@ -492,8 +492,8 @@ AFTER CHANGES
 ### resource
 cat <<'eof'>  my-first-terraform.tf
 resource "local_file" "myfirstfile" {
-  filename  = var.filename
-    content   = var.file_content
+  filename  = var.filename  #<--------------- calling the variable
+    content   = var.file_content  #<--------------- calling the variable
 }
 resource "random_pet" "mypetname" {
     length = 2
@@ -622,7 +622,7 @@ resource "random_pet" "mypetname" {
 
 ### output block
 output "my_pet_name"{
-    value = random_pet.mypetname.id
+    value = random_pet.mypetname.id ##
 }
 
 
@@ -645,3 +645,16 @@ root@terra:~/introduction#
 ### where the output will be used? there is a concept called module. There are two projects like vpc and vpc id needs to be refered into another project as input
 one state file 
 ########## < put notes here explains at 21-5-2025 4714 > ###########
+
+FILE STRUCTURE:
+root@terra:~/introduction# tree
+.
+├── main.tf
+├── myfile.txt
+├── providers.tf
+├── terraform.tfstate
+├── terraform.tfstate.backup
+└── variables.tf
+
+1 directory, 6 files
+root@terra:~/introduction# 
