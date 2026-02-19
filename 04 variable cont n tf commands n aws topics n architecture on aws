@@ -1,0 +1,29 @@
+VARIABLES
+=========
+# note: if you dont put in the default value for the provider resource, it will ask at the time of planning or applying the terraform code.
+### there are multiple of Data Types:
+List of Data Types:
+String
+number
+bool
+list()
+map() 
+
+Validation Block 
+----------------
+whenever we want to pass a value for the variable on a condition, we can use a validation block for it. 
+e.g
+
+
+MULTIPLE WAYS TO PASS THE VALUES:
+---------------------------------
+INPUTTING VARIABLE THROUGH CLI: 
+
+SYSTEM ENVIRONMENT:
+
+THROUGH FILE:
+
+AUTO-SUPPLY INPUTS VIA FILE:
+
+
+
