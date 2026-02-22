@@ -131,3 +131,10 @@ graph.svg #<-------------  main.tf  myfile.txt  providers.tf  terraform.tfstate 
 root@terra:~/introduction# 
 
 ### TIP: you can open it through the scp remote:/<path>/ /<local path>/
+
+### graph.svg How to read the graph 
+RECTAGE = resource
+PAPAER = VARIABLE 
+DIAMOND = PORVIDERS 
+CIRLCLE = ? 
+Arrows = anything below the arrows are the dependencies needed to create the resources. 
