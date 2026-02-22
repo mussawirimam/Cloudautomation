@@ -76,6 +76,8 @@ my_pet_name = "MR.content.vulture"
 root@terra:~/introduction# 
 
 ### FLAG -JSON 
+#tool to beautify and view resources of json:
+https://jsonviewer.stack.hu
 ### why would you need it? if you are trying to write somescript. I want to refer some resrouce or access it via programmatic way. In json you can code it in your program logic to read the values. 
 ### you can beautify this output in json format
 root@terra:~/introduction# terraform show -json
@@ -104,6 +106,28 @@ my_pet_name = "MR.content.vulture"
 root@terra:~/introduction# 
 
 
+### TF GRAPH
+root@terra:~/introduction# terraform graph 
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "local_file.myfirstfile" [label="local_file.myfirstfile"];
+  "random_pet.mypetname" [label="random_pet.mypetname"];
+}
+root@terra:~/introduction# terraform graph 
+root@terra:~/introduction# terraform graph | dot -Tsvg > graph.svg 
+Command 'dot' not found, but can be installed with:
+apt install graphviz
+root@terra:~/introduction# 
 
+root@terra:~/introduction# apt install graphviz
+Reading package lists... Done
+Building dependency tree... Done
+...
 
+root@terra:~/introduction# terraform graph | dot -Tsvg > graph.svg 
+root@terra:~/introduction# ls
+graph.svg #<-------------  main.tf  myfile.txt  providers.tf  terraform.tfstate  terraform.tfstate.backup  variables.tf
+root@terra:~/introduction# 
 
+### TIP: you can open it through the scp remote:/<path>/ /<local path>/
