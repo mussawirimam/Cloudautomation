@@ -26,4 +26,84 @@ THROUGH FILE:
 AUTO-SUPPLY INPUTS VIA FILE:
 
 
+|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+
+TF COMMANDS: 
+### terraform show adds what are the resource being manged by the TFstatefile. 
+
+root@terra:~/introduction# terraform show --help
+Usage: terraform [global options] show [options] [path]
+
+  Reads and outputs a Terraform state or plan file in a human-readable
+  form. If no path is specified, the current state will be shown.
+
+Options:
+
+  -no-color           If specified, output won't contain any color.
+  -json               If specified, output the Terraform plan or state in
+                      a machine-readable form.
+root@terra:~/introduction# 
+
+
+root@terra:~/introduction# terraform show
+# local_file.myfirstfile:
+resource "local_file" "myfirstfile" {
+    content              = "This is the first file created using terraform"
+    content_base64sha256 = "Tvj8Jm5k2CBlCyheyTP12cHkNcRuoYNIJYt3YdR1GVM="
+    content_base64sha512 = "LLGYa2ko+GNeM7XxdMeNuPYLR1derGZdkl1xLJ+IXtkQvbWELN6HY3kaQyxNDPWnQrf1FUM0ummkeqFEQ+pSUw=="
+    content_md5          = "74266c9a42d8b128de71d6c75a7d51a2"
+    content_sha1         = "0a0cd87c97d0d36d8ec98c240b3aa48989f04324"
+    content_sha256       = "4ef8fc266e64d820650b285ec933f5d9c1e435c46ea18348258b7761d4751953"
+    content_sha512       = "2cb1986b6928f8635e33b5f174c78db8f60b47575eac665d925d712c9f885ed910bdb5842cde8763791a432c4d0cf5a742b7f5154334ba69a47aa14443ea5253"
+    directory_permission = "0777"
+    file_permission      = "0777"
+    filename             = "myfile.txt"
+    id                   = "0a0cd87c97d0d36d8ec98c240b3aa48989f04324"
+}
+
+# random_pet.mypetname:
+resource "random_pet" "mypetname" {
+    id        = "MR.content.vulture"
+    length    = 2
+    prefix    = "MR"
+    separator = "."
+}
+
+Outputs:
+
+my_pet_name = "MR.content.vulture"
+root@terra:~/introduction# 
+
+### FLAG -JSON 
+### why would you need it? if you are trying to write somescript. I want to refer some resrouce or access it via programmatic way. In json you can code it in your program logic to read the values. 
+### you can beautify this output in json format
+root@terra:~/introduction# terraform show -json
+{"format_version":"1.0","terraform_version":"1.14.4","values":{"outputs":{"my_pet_name":{"sensitive":false,"value":"MR.content.vulture","type":"string"}},"root_module":{"resources":[{"address":"local_file.myfirstfile","mode":"managed","type":"local_file","name":"myfirstfile","provider_name":"registry.terraform.io/hashicorp/local","schema_version":0,"values":{"content":"This is the first file created using terraform","content_base64":null,"content_base64sha256":"Tvj8Jm5k2CBlCyheyTP12cHkNcRuoYNIJYt3YdR1GVM=","content_base64sha512":"LLGYa2ko+GNeM7XxdMeNuPYLR1derGZdkl1xLJ+IXtkQvbWELN6HY3kaQyxNDPWnQrf1FUM0ummkeqFEQ+pSUw==","content_md5":"74266c9a42d8b128de71d6c75a7d51a2","content_sha1":"0a0cd87c97d0d36d8ec98c240b3aa48989f04324","content_sha256":"4ef8fc266e64d820650b285ec933f5d9c1e435c46ea18348258b7761d4751953","content_sha512":"2cb1986b6928f8635e33b5f174c78db8f60b47575eac665d925d712c9f885ed910bdb5842cde8763791a432c4d0cf5a742b7f5154334ba69a47aa14443ea5253","directory_permission":"0777","file_permission":"0777","filename":"myfile.txt","id":"0a0cd87c97d0d36d8ec98c240b3aa48989f04324","sensitive_content":null,"source":null},"sensitive_values":{"sensitive_content":true}},{"address":"random_pet.mypetname","mode":"managed","type":"random_pet","name":"mypetname","provider_name":"registry.terraform.io/hashicorp/random","schema_version":0,"values":{"id":"MR.content.vulture","keepers":null,"length":2,"prefix":"MR","separator":"."},"sensitive_values":{}}]}}}
+root@terra:~/introduction# 
+
+### it will tell me which providers are being used in project. 
+root@terra:~/introduction# terraform providers
+
+Providers required by configuration:
+.
+├── provider[registry.terraform.io/hashicorp/local] 2.5.3
+└── provider[registry.terraform.io/hashicorp/random] 3.8.1
+
+Providers required by state:
+
+    provider[registry.terraform.io/hashicorp/random]
+
+    provider[registry.terraform.io/hashicorp/local]
+
+root@terra:~/introduction# 
+
+### To see all the outputs written to TFstate file.
+root@terra:~/introduction# terraform output
+my_pet_name = "MR.content.vulture"
+root@terra:~/introduction# 
+
+
+
+
 
