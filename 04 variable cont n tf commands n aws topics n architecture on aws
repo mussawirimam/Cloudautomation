@@ -9,19 +9,52 @@ bool
 list()
 map() 
 
+Pre-Lesson:
+cat <<'eod'> variables.tf
+### variables
+variable "filename" {
+    default = "myfile.txt"
+    type = string
+    description = "Name of the file to create"
+}
+
+variable "file_content" {
+#    default = "This is the first file created using terraform" <---------------------- if you dont provide the value, it will ask you at the time you run the terraform plan 
+    type = string
+    description = "The content of the file"
+}
+eod
+
+root@terra:~/introduction# terraform plan
+var.file_content
+  The content of the file
+
+  Enter a value: 
+
 Validation Block 
 ----------------
 whenever we want to pass a value for the variable on a condition, we can use a validation block for it. 
 e.g
 
 
+
 MULTIPLE WAYS TO PASS THE VALUES:
 ---------------------------------
 INPUTTING VARIABLE THROUGH CLI: 
 
+
+
+
 SYSTEM ENVIRONMENT:
 
+
+
+
 THROUGH FILE:
+
+
+
+
 
 AUTO-SUPPLY INPUTS VIA FILE:
 
