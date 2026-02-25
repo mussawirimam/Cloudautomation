@@ -162,6 +162,7 @@ root@terra:~/introduction#
 
 MULTIPLE WAYS TO PASS THE VALUES:
 =================================
+--------------------------------
 INPUTTING VARIABLE THROUGH CLI: 
 --------------------------------
 cat <<'eod'> variables.tf
@@ -206,6 +207,7 @@ graph.svg  main.tf  myfile.txt  providers.tf  terraform.tfstate  terraform.tfsta
 root@terra:~/introduction# cat myfile.txt 
 This is the first file created using terraformroot@terra:~/introduction# 
 
+--------------------------------
 SYSTEM ENVIRONMENT:
 --------------------------------
 root@terra:~/introduction# env ###<--------------------------
@@ -308,13 +310,13 @@ root@terra:~/introduction#
 
 
 
-
+--------------------------------
 THROUGH FILE:
 --------------------------------
 
 
 
-
+--------------------------------
 AUTO-SUPPLY INPUTS VIA FILE:
 --------------------------------
 
