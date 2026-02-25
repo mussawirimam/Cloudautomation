@@ -39,6 +39,7 @@ terraform plan -var-file=<filename.tfvars>
 
 AUTO-SUPPLY INPUTS VIA FILE:
 - how to auto supply the input values via file
+create a file with the extension of auto.tfvars
 
 VARIABLES
 =========
