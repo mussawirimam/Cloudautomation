@@ -11,6 +11,25 @@ map()
 
 Pre-Lesson:
 ===========
+-------------------------------
+MAIN.TF FILE
+cat <<'eod' > main.tf
+resource "local_file" "myfirstfile" {
+  filename = var.filename
+  content  = var.file_content
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
+-------------------------------
 cat <<'eod'> variables.tf
 ### variables
 variable "filename" {
@@ -35,35 +54,141 @@ var.file_content
 Validation Block 
 ----------------
 whenever we want to pass a value for the variable on a condition, we can use a validation block for it. 
+### if some certain conditions I want to impose, I can use the validation block
+### lets say condition for validation block is that the prefix/substring should be "dev-" only then the code will run 
 e.g
+cat <<'eod'> variables.tf
+### variables
+variable "filename" {
+    #default = "myfile.txt"
+    type = string
+    description = "Name of the file to create"
+    # validation block
+    validation {
+        condition = substr(var.filename,0,4) == "dev-"
+        error_message = "The value must be starting with dev-"
+    }
+}
+
+variable "file_content" {
+#    default = "This is the first file created using terraform"
+    type = string
+    # for datatypes, we can use: string, number, bool, list(), map()
+    description = "The content of the file"
+}
+eod
+### whenever the value is going to be provided by the fileename and the value isnt matching then you will get an error
+###ERROR because we did not match the validation block value that was given in the variables.tf file.
+
+root@terra:~/introduction# terraform fmt variables.tf
+root@terra:~/introduction# terraform plan
+var.file_content
+  The content of the file
+
+  Enter a value: asdlkjdskalfjlfdsa
+
+var.filename
+  Name of the file to create
+
+  Enter a value: ladfsjllsdfflkfdsalk
+
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Planning failed. Terraform encountered an error while generating this plan.
+
+╷
+│ Error: Invalid value for variable
+│ 
+│   on variables.tf line 2:
+│    2: variable "filename" {
+│     ├────────────────
+│     │ var.filename is "ladfsjllsdfflkfdsalk"
+│ 
+│ The value must be starting with dev-
+│ 
+│ This was checked by the validation rule at variables.tf:7,3-13.
+╵
+root@terra:~/introduction# 
+
+###SUCCESS because we matched the validation block value that was given in the variables.tf file.
+root@terra:~/introduction# terraform plan
+var.file_content
+  The content of the file
+
+  Enter a value: I am checking for the validation block
+
+var.filename
+  Name of the file to create
+
+  Enter a value: dev-newfile.txt
+
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240
+...
+
+root@terra:~/introduction# ls
+graph.svg  main.tf  myfile.txt  providers.tf  terraform.tfstate  terraform.tfstate.backup  test.txt  variables.tf
+root@terra:~/introduction# 
+root@terra:~/introduction# cat myfile.txt 
+This is the first file created using terraform
+root@terra:~/introduction# 
+
+
+
+
+
 
 
 
 MULTIPLE WAYS TO PASS THE VALUES:
----------------------------------
+=================================
 INPUTTING VARIABLE THROUGH CLI: 
-
+--------------------------------
 
 
 
 SYSTEM ENVIRONMENT:
-
+--------------------------------
 
 
 
 THROUGH FILE:
-
+--------------------------------
 
 
 
 
 AUTO-SUPPLY INPUTS VIA FILE:
-
+--------------------------------
 
 |------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 
 TF COMMANDS: 
+
+### TF FMT (FORMAT): 
+terraform fmt ### formats the .tf files
+
+oot@terra:~/introduction# ls
+graph.svg  main.tf  myfile.txt  providers.tf  terraform.tfstate  terraform.tfstate.backup  test.txt  variables.tf
+root@terra:~/introduction# terraform fmt main.tf 
+root@terra:~/introduction# cat main.tf 
+resource "local_file" "myfirstfile" {
+  filename = var.filename
+  content  = var.file_content
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+root@terra:~/introduction# 
+
 ### terraform show adds what are the resource being manged by the TFstatefile. 
 
 root@terra:~/introduction# terraform show --help
