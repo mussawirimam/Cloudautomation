@@ -1,16 +1,3 @@
-VARIABLES
-=========
-# note: if you dont put in the default value for the provider resource, it will ask at the time of planning or applying the terraform code.
-### there are multiple of Data Types:
-List of Data Types:
-String
-number
-bool
-list()
-map() 
-
-Pre-Lesson:
-===========
 -------------------------------
 MAIN.TF FILE
 cat <<'eod' > main.tf
@@ -30,6 +17,39 @@ output "my_pet_name" {
 }
 eod
 -------------------------------
+VARIABLES: 
+variables can be passed through these methods:
+- default value
+CLI:
+- promted value in CLI
+- pass it via CLI as -var
+terraform plan -var="variablename=value"
+
+ENV VARIABLE:
+- Input the value for a variable via system environment variable
+export TF_VAR_<variableName>=<value>
+
+verify using env command 
+to unset,
+unset TF_VAR_<variableName>
+
+FILE:
+- How to supply the input values via file
+
+VARIABLES
+=========
+# note: if you dont put in the default value for the provider resource, it will ask at the time of planning or applying the terraform code.
+### there are multiple of Data Types:
+List of Data Types:
+String
+number
+bool
+list()
+map() 
+
+Pre-Lesson:
+===========
+
 cat <<'eod'> variables.tf
 ### variables
 variable "filename" {
@@ -144,11 +164,148 @@ MULTIPLE WAYS TO PASS THE VALUES:
 =================================
 INPUTTING VARIABLE THROUGH CLI: 
 --------------------------------
+cat <<'eod'> variables.tf
+### variables
+variable "filename" {
+    #default = "myfile.txt"
+    type = string
+    description = "Name of the file to create"
+    # validation block
+    validation {
+        condition = substr(var.filename,0,4) == "dev-"
+        error_message = "The value must be starting with dev-"
+    }
+}
 
+variable "file_content" {
+#    default = "This is the first file created using terraform"
+    type = string
+    # for datatypes, we can use: string, number, bool, list(), map()
+    description = "The content of the file"
+}
+eod
 
+root@terra:~/introduction# terraform plan -var="filename=dev-newfile.txt"
+var.file_content
+  The content of the file
+
+  Enter a value: this is a new file now
+
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+...
+
+root@terra:~/introduction# ls
+graph.svg  main.tf  myfile.txt  providers.tf  terraform.tfstate  terraform.tfstate.backup  test.txt  variables.tf
+root@terra:~/introduction# cat myfile.txt 
+This is the first file created using terraformroot@terra:~/introduction# 
 
 SYSTEM ENVIRONMENT:
 --------------------------------
+root@terra:~/introduction# env ###<--------------------------
+SHELL=/bin/bash
+PWD=/root/introduction
+LOGNAME=root
+HOME=/root
+...
+root@terra:~/introduction# 
+
+### Terraform should understand that it is terraform related value
+### To do that you have to give TF related format: TF_VAR_<variable name> 
+root@terra:~/introduction# export TF_VAR_filename=dev-newfile.txt
+
+root@terra:~/introduction# env|grep TF
+TF_VAR_filename=dev-newfile.txt
+LANG=en_US.UTF-8
+root@terra:~/introduction#
+
+
+### with this if we provide Terraform plan, we will get the new file. We wont have to provide the filename prefix to pass the value
+### it it will pick up from the TF variable placed in the ENVIRONMENT VARIABLES from the system. 
+root@terra:~/introduction# terraform plan
+var.file_content
+  The content of the file
+
+  Enter a value: this is a new fle
+
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile must be replaced
+-/+ resource "local_file" "myfirstfile" {
+      ~ content              = "This is the first file created using terraform" -> "this is a new fle" # forces replacement
+      ~ content_base64sha256 = "Tvj8Jm5k2CBlCyheyTP12cHkNcRuoYNIJYt3YdR1GVM=" -> (known after apply)
+      ~ content_base64sha512 = "LLGYa2ko+GNeM7XxdMeNuPYLR1derGZdkl1xLJ+IXtkQvbWELN6HY3kaQyxNDPWnQrf1FUM0ummkeqFEQ+pSUw==" -> (known after apply)
+      ~ content_md5          = "74266c9a42d8b128de71d6c75a7d51a2" -> (known after apply)
+      ~ content_sha1         = "0a0cd87c97d0d36d8ec98c240b3aa48989f04324" -> (known after apply)
+      ~ content_sha256       = "4ef8fc266e64d820650b285ec933f5d9c1e435c46ea18348258b7761d4751953" -> (known after apply)
+      ~ content_sha512       = "2cb1986b6928f8635e33b5f174c78db8f60b47575eac665d925d712c9f885ed910bdb5842cde8763791a432c4d0cf5a742b7f5154334ba69a47aa14443ea5253" -> (known after apply)
+      ~ filename             = "myfile.txt" -> "dev-newfile.txt" # forces replacement
+      ~ id                   = "0a0cd87c97d0d36d8ec98c240b3aa48989f04324" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+### TO UNSET ENVIRONMENT TERRAFORM VARIABLE:
+root@terra:~/introduction# unset TF_VAR_filename
+root@terra:~/introduction# env|grep TF
+LANG=en_US.UTF-8
+root@terra:~/introduction# 
+
+### Now if you do Terraform plan, it should give you an error, because it is mentioned in the system environment variables
+root@terra:~/introduction# unset TF_VAR_filename
+root@terra:~/introduction# env|grep TF
+LANG=en_US.UTF-8
+root@terra:~/introduction# terraform plan 
+var.file_content
+  The content of the file
+
+  Enter a value: test
+
+var.filename
+  Name of the file to create
+
+  Enter a value: test
+
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Planning failed. Terraform encountered an error while generating this plan.
+
+╷
+│ Error: Invalid value for variable
+│ 
+│   on variables.tf line 2:
+│    2: variable "filename" {
+│     ├────────────────
+│     │ var.filename is "test"
+│ 
+│ The value must be starting with dev-
+│ 
+│ This was checked by the validation rule at variables.tf:7,3-13.
+╵
+root@terra:~/introduction# 
+
+
+
 
 
 
