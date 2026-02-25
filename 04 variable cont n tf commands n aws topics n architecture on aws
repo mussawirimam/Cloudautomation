@@ -314,12 +314,69 @@ root@terra:~/introduction#
 THROUGH FILE:
 --------------------------------
 
+### create a file with the extention file ---------> .tfvars
+root@terra:~/introduction# touch input.tfvars
+root@terra:~/introduction# 
+
+### when you create .tf file it is a terraform file and when you create a .tfvars, it is a variable file for the terraform.
+### which variable we want to supply, lets specify that
+
+cat <<'eod' > input.tfvars
+filename = "dev-namefromfile.txt"
+eod
+
+root@terra:~/introduction# cat input.tfvars 
+filename = "dev-namefromfile.txt"
+root@terra:~/introduction# 
+
+### The variable input will be picked up directly from the input.tfvars file. 
+root@terra:~/introduction# terraform plan -var-file=input.tfvars
+var.file_content
+  The content of the file
+
+  Enter a value: this is input.tfvars file added in the content
+
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile will be created
+  + resource "local_file" "myfirstfile" {
+      + content              = "this is input.tfvars file added in the content"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-namefromfile.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+
+
 
 
 --------------------------------
 AUTO-SUPPLY INPUTS VIA FILE:
 --------------------------------
 
+|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 
