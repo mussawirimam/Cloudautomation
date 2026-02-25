@@ -10,6 +10,7 @@ list()
 map() 
 
 Pre-Lesson:
+===========
 cat <<'eod'> variables.tf
 ### variables
 variable "filename" {
