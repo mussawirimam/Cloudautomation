@@ -35,6 +35,10 @@ unset TF_VAR_<variableName>
 
 FILE:
 - How to supply the input values via file
+terraform plan -var-file=<filename.tfvars>
+
+AUTO-SUPPLY INPUTS VIA FILE:
+- how to auto supply the input values via file
 
 VARIABLES
 =========
@@ -210,6 +214,7 @@ This is the first file created using terraformroot@terra:~/introduction#
 --------------------------------
 SYSTEM ENVIRONMENT:
 --------------------------------
+### ENV
 root@terra:~/introduction# env ###<--------------------------
 SHELL=/bin/bash
 PWD=/root/introduction
@@ -218,7 +223,7 @@ HOME=/root
 ...
 root@terra:~/introduction# 
 
-### Terraform should understand that it is terraform related value
+### Terraform should understand that it is terraform related value in system environment variable
 ### To do that you have to give TF related format: TF_VAR_<variable name> 
 root@terra:~/introduction# export TF_VAR_filename=dev-newfile.txt
 
@@ -375,7 +380,54 @@ root@terra:~/introduction#
 --------------------------------
 AUTO-SUPPLY INPUTS VIA FILE:
 --------------------------------
+### If you dont want the getting prompts at all, you will need to create a file called input.auto.tfvars
+### by doing that you will direct the terraform to get the inputs prompts directly from auto.tfvars
+cat <<'eod' > input.auto.tfvars
+filename = "dev-autofromfile.txt"
+eod
 
+root@terra:~/introduction# ls
+graph.svg  input.auto.tfvars  main.tf  providers.tf  terraform.tfstate  terraform.tfstate.backup  test.txt  variables.tf
+root@terra:~/introduction# terraform plan
+var.file_content
+  The content of the file
+
+  Enter a value: this is in the auto.tfvars
+
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile will be created
+  + resource "local_file" "myfirstfile" {
+      + content              = "this is in the auto.tfvars"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+### you didnt have to specify terraform plan -var-file=input.tfvars in case of the auto.tfvars 
+### it picked up the variable inputs directly from the input.auto.tfvars file
 |------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
