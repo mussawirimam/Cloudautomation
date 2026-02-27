@@ -1,0 +1,95 @@
+Terraform provides three primary lifecycle meta-arguments that allow you to control how a resource is created, updated, or destroyed.
+For completeness, the three lifecycle rules are:
+
+1. create_before_destroy
+2. prevent_destroy
+3. ignore_changes
+
+TL;DR — Terraform lifecycle meta-arguments
+They control how Terraform creates, updates, or destroys a resource.
+
+1. create_before_destroy → Create the new resource first, then delete the old one (zero/minimal downtime strategy).
+2. prevent_destroy → Blocks accidental deletion (safety lock).
+3. ignore_changes → Tells Terraform to ignore certain attribute changes (don’t trigger updates for them).
+
+In one sentence: They modify Terraform’s default replacement and update behavior to give you safer and more controlled infrastructure changes. Or in simple word they control the behavior of the resrouces getting provisoned. 
+
+SCENERIO:
+
++======================================================================+
+|           TERRAFORM LIFECYCLE: create_before_destroy                 |
++======================================================================+
+
+WHAT IT DOES
+------------
+create_before_destroy = true
+
+-> Creates the NEW resource first
+-> Then destroys the OLD resource
+-> Prevents downtime during replacement
+
+
+DEFAULT BEHAVIOR (WITHOUT LIFECYCLE)
+------------------------------------
+
+Example:
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+}
+
+When instance_type changes:
+1) Destroy old instance
+2) Create new instance
+
+Result: DOWNTIME
+
+
+WITH create_before_destroy
+--------------------------
+
+Example:
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.large"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+What happens:
+1) Terraform creates the NEW instance first
+2) Waits until it is fully provisioned
+3) Then destroys the OLD instance
+
+Result: ZERO or MINIMAL downtime
+
+
+REAL-WORLD ANALOGY
+------------------
+BAD:
+- Cancel apartment lease
+- Then look for new apartment
+
+GOOD:
+- Rent new apartment
+- Move furniture
+- Then cancel old lease
+
+
+WHEN TO USE
+-----------
+- Production EC2 instances
+- Databases
+- Load-balanced services
+- Customer-facing applications
+
+
+DEVOPS CONCEPT
+--------------
+Enables blue-green style replacement
+instead of destructive replacement.
++======================================================================+
