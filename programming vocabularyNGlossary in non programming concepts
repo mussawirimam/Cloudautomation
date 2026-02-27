@@ -289,3 +289,136 @@ ONE-LINE MEMORY TRICK
 ---------------------
 Attributes = Qualities.
 Parameters = Limits.
+
+
+
+===============================================================================
+                 PROPERTY vs ATTRIBUTE — COMPLETE MASTER NOTE
+===============================================================================
+
+DEFINITION (GENERAL ENGLISH)
+-------------------------------------------------------------------------------
+Property  = A quality/feature of something OR something owned
+Attribute = A characteristic that describes something
+
+Example:
+
+DOG
+ |
+ |-- Color = Brown
+ |-- Age = 3
+ |-- Breed = Labrador
+
+Color, Age, Breed
+→ can be called properties
+→ can also be called attributes
+
+In everyday English:
+Property ≈ Attribute
+
+
+OWNERSHIP MEANING
+-------------------------------------------------------------------------------
+Property can also mean something you legally own.
+
+Examples:
+- House
+- Land
+- Building
+
+Example:
+A house in New York City
+→ That house is your property.
+
+
+IN PROGRAMMING
+-------------------------------------------------------------------------------
+
+PROPERTY (Object-Oriented Programming)
+
+Property = Data stored inside an object
+
+Think of an object as a digital thing.
+
+Example:
+
+Car Object
+ |
+ |-- color = "Red"
+ |-- speed = 120
+ |-- brand = "Toyota"
+
+color, speed, brand
+→ are properties of the Car object
+
+In OOP languages like Java, Python, and C#,
+object data members are usually called properties.
+
+Example structure:
+
+Person
+ |
+ |-- name
+ |-- age
+
+name and age → properties
+
+
+ATTRIBUTE (Programming Contexts)
+
+1) HTML (Web Development)
+
+Attribute = Extra information added to something
+
+Example concept:
+
+Image element
+ |
+ |-- src
+ |-- width
+
+src and width → attributes
+
+Rule:
+Element → has attributes
+
+
+2) DATABASES
+
+User Table
+ |
+ |-- name
+ |-- email
+ |-- age
+
+Each column can be called:
+→ Attribute
+
+Rule:
+Table column = Attribute
+
+
+SIMPLE PROGRAMMING DIFFERENCE
+-------------------------------------------------------------------------------
+Property  = Data inside an object (OOP)
+Attribute = Descriptive data (HTML or Database)
+
+BUT in real-world usage:
+Property ≈ Attribute
+(often used interchangeably)
+
+
+FINAL BEGINNER RULE
+-------------------------------------------------------------------------------
+If talking about objects → say PROPERTY
+If talking about HTML or databases → say ATTRIBUTE
+
+Do not overthink it.
+Even experienced programmers sometimes mix the terms.
+
+Property = A characteristic OR something owned
+Object → stores data → that data is a property
+<img src="photo.jpg" width="300">
+
+===============================================================================
+
