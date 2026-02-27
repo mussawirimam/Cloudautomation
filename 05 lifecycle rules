@@ -93,3 +93,151 @@ DEVOPS CONCEPT
 Enables blue-green style replacement
 instead of destructive replacement.
 +======================================================================+
+
++======================================================================+
+|               TERRAFORM LIFECYCLE: prevent_destroy                   |
++======================================================================+
+
+WHAT IT DOES
+------------
+prevent_destroy = true
+
+-> Prevents Terraform from destroying a resource
+-> Throws an error if a destroy is attempted
+-> Acts as a safety lock
+
+
+DEFAULT BEHAVIOR (WITHOUT LIFECYCLE)
+------------------------------------
+
+Example:
+
+resource "aws_db_instance" "prod_db" {
+  allocated_storage = 20
+  engine            = "mysql"
+}
+
+If someone runs:
+terraform destroy
+
+Result:
+Database gets deleted.
+
+
+WITH prevent_destroy
+--------------------
+
+Example:
+
+resource "aws_db_instance" "prod_db" {
+  allocated_storage = 20
+  engine            = "mysql"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+If someone runs:
+terraform destroy
+
+Result:
+Terraform throws an ERROR.
+Resource cannot be destroyed.
+
+
+REAL-WORLD ANALOGY
+------------------
+- Like putting a safety lock on a nuclear launch button.
+- You must intentionally remove the lock before action.
+
+
+WHEN TO USE
+-----------
+- Production databases
+- Critical storage buckets
+- Stateful systems
+- Anything that must NEVER be deleted accidentally
+
+
+DEVOPS CONCEPT
+--------------
+Adds a protection guardrail
+against accidental infrastructure loss.
++======================================================================+
+
++======================================================================+
+|                TERRAFORM LIFECYCLE: ignore_changes                   |
++======================================================================+
+
+WHAT IT DOES
+------------
+ignore_changes = [attribute]
+
+-> Tells Terraform to ignore changes to specific attributes
+-> Prevents unnecessary updates or replacements
+-> Useful when values are modified outside Terraform
+
+
+DEFAULT BEHAVIOR (WITHOUT LIFECYCLE)
+------------------------------------
+
+Example:
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+  tags = {
+    Name = "AppServer"
+  }
+}
+
+If someone manually changes a tag in AWS console:
+
+Result:
+Terraform detects drift and tries to fix it.
+
+
+WITH ignore_changes
+-------------------
+
+Example:
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+
+  tags = {
+    Name = "AppServer"
+  }
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
+}
+
+If tags change outside Terraform:
+
+Result:
+Terraform ignores the change.
+No update triggered.
+
+
+REAL-WORLD ANALOGY
+------------------
+- Like telling Terraform:
+  "Don’t worry about this part. Leave it alone."
+
+
+WHEN TO USE
+-----------
+- Auto-managed tags
+- Attributes changed by external systems
+- Cloud provider auto-updated fields
+
+
+DEVOPS CONCEPT
+--------------
+Controls drift detection behavior
+by selectively ignoring attribute changes.
++======================================================================+
