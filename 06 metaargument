@@ -88,3 +88,9 @@ Meta-arguments modify dependency graph,
 resource iteration, lifecycle behavior,
 and execution order.
 +======================================================================+
+### let's do terraform destory to start fresh slate of tfstate
+root@terra:~/introduction# terraform destroy
+random_pet.mypetname: Refreshing state... [id=MR.
+...
+
+IMPLICIT VS EXPLICIT DEPENDENCY
