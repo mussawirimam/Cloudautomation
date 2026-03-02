@@ -194,6 +194,7 @@ root@terra:~/introduction#
 INTERPOLATION SEQUENCE
 =======================
 ${}
+### we are going to take the output of the random provider by adding output block and use the result of output as the interpolation in our code.
 Use case when you generate a pet name for example through the random provider, you can use that in other resrouces like in local_file provider resources within the content of the file
 resource "local_file" "myfirstfile" {
   filename  = "terraform_file.txt!"
