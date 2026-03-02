@@ -1,0 +1,90 @@
++======================================================================+
+|                 TERRAFORM META-ARGUMENTS                             |
++======================================================================+
+
+WHAT IT IS
+----------
+A meta-argument is a special argument in Terraform
+that controls HOW a resource behaves.
+
+It does NOT configure the infrastructure itself.
+It controls Terraform’s behavior.
+
+
+KEY IDEA
+--------
+Normal argument  -> Configures the resource
+Meta-argument    -> Configures Terraform behavior
+
+
+COMMON META-ARGUMENTS
+---------------------
+- depends_on
+- count
+- for_each
+- provider
+- lifecycle
+
+
+EXAMPLE 1: count
+----------------
+
+resource "aws_instance" "app" {
+  count         = 3
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+}
+
+Result:
+Terraform creates 3 EC2 instances.
+
+
+EXAMPLE 2: depends_on
+---------------------
+
+resource "aws_instance" "app" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+
+  depends_on = [aws_s3_bucket.logs]
+}
+
+Result:
+Terraform ensures the S3 bucket is created first.
+
+
+EXAMPLE 3: lifecycle
+--------------------
+
+resource "aws_instance" "app" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+Result:
+Terraform blocks destruction.
+
+
+HOW TO IDENTIFY A META-ARGUMENT
+-------------------------------
+- Works in most resource types
+- Controls provisioning logic
+- Not specific to one provider
+
+
+REAL-WORLD ANALOGY
+------------------
+Resource arguments  = What you build
+Meta-arguments      = Rules for how construction happens
+
+
+DEVOPS CONCEPT
+--------------
+Meta-arguments modify dependency graph,
+resource iteration, lifecycle behavior,
+and execution order.
++======================================================================+
