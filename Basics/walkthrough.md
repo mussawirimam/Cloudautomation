@@ -1,5 +1,5 @@
 create a folder structure
-<p>mkdir introduction /n
+<p>mkdir introduction <br>
 cd introduction</p>
 
 ### add the TF files to this directory
