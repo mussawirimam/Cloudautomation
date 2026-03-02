@@ -306,6 +306,139 @@ root@terra:~/introduction#
 # dependencies - 2 types - 1. implicit 2. explicit
 ############## < put notes 21-5-2025 from 2933 here > ############## 
 
++======================================================================+
+|         TERRAFORM: IMPLICIT VS EXPLICIT DEPENDENCY                   |
++======================================================================+
+
+CORE IDEA
+---------
+Dependency = The order Terraform uses to create resources
+based on relationships in the dependency graph.
+
+
+======================================================================
+IMPLICIT DEPENDENCY
+======================================================================
+
+WHAT IT IS
+----------
+Terraform automatically detects dependency
+when one resource references another.
+
+No manual instruction required.
+
+
+HOW IT WORKS
+------------
+If Resource A uses an attribute from Resource B,
+Terraform creates Resource B first.
+
+
+EXAMPLE
+-------
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "my-logs-bucket"
+}
+
+resource "aws_instance" "app" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+
+  user_data = aws_s3_bucket.logs.bucket
+}
+
+WHAT HAPPENS
+------------
+- aws_instance.app references aws_s3_bucket.logs
+- Terraform automatically builds S3 bucket first
+
+This is IMPLICIT dependency.
+
+
+WHY IT'S PREFERRED
+------------------
+- Cleaner code
+- Graph-driven
+- Less manual management
+
+
+
+======================================================================
+EXPLICIT DEPENDENCY
+======================================================================
+
+WHAT IT IS
+----------
+When you manually define dependency
+using the depends_on meta-argument.
+
+
+WHY IT'S NEEDED
+---------------
+When Terraform cannot detect the relationship
+through attribute references.
+
+
+EXAMPLE
+-------
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "my-logs-bucket"
+}
+
+resource "aws_instance" "app" {
+  ami           = "ami-xxxx"
+  instance_type = "t3.medium"
+
+  depends_on = [aws_s3_bucket.logs]
+}
+
+WHAT HAPPENS
+------------
+- Even without referencing bucket attributes
+- Terraform forces S3 bucket to be created first
+
+This is EXPLICIT dependency.
+
+
+
+======================================================================
+SIDE-BY-SIDE COMPARISON
+======================================================================
+
+IMPLICIT
+--------
+- Automatic
+- Based on attribute reference
+- Preferred method
+
+EXPLICIT
+--------
+- Manual
+- Uses depends_on
+- Used when Terraform cannot infer dependency
+
+
+
+REAL-WORLD ANALOGY
+------------------
+
+Implicit:
+- You need electricity before turning on lights.
+- It is naturally required.
+
+Explicit:
+- You tell the contractor:
+  "Finish plumbing before painting."
+
+
+DEVOPS CONCEPT
+--------------
+Terraform builds a dependency graph (DAG).
+Implicit edges come from references.
+Explicit edges come from depends_on.
++======================================================================+
 
 |----------------------------------------------------------------------------------------------------------|
 VARIABLES
