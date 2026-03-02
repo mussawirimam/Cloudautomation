@@ -319,3 +319,6 @@ Outputs:
 my_pet_name = "MR.marmoset"
 root@terra:~/introduction# 
 
+There are two dependency types: 
+Implicity is something Terraform takes care of
+Explicit is something you have mention 
