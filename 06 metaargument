@@ -94,4 +94,61 @@ random_pet.mypetname: Refreshing state... [id=MR.
 ...
 
 IMPLICIT VS EXPLICIT DEPENDENCY
+### there is a dependency for which resrouce random_pet will be generated first to be placed as interpolation sequence in resrouce local_file. e.g sequence 2 then 1 then 3
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  #content  = var.file_content
+  content  = "my new file content ${random_pet.mypetname.id}" ### this is interpolation sequence which means, it is implicitly dependant on the resource local_file to be created first. And then it will be create and used.
+  #content = data.local_file.read_mytext.content 
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  lifecycle {
+    ignore_changes = [
+      length
+    ]
+  }
+}
 
+data "local_file" "read_mytext" {
+  filename = "mytext.txt"
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
+### there are no dependencies in this case. It will first create the file resource and then random petname. e.g sequence 1 then 2 then 3
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  #content  = var.file_content
+  #content  = "my new file content ${random_pet.mypetname.id}"
+  content = "threre are no dependencies, so it will follow a normal sequence"
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  lifecycle {
+    ignore_changes = [
+      length
+    ]
+  }
+}
+
+data "local_file" "read_mytext" {
+  filename = "mytext.txt"
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
