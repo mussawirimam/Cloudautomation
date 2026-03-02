@@ -241,3 +241,113 @@ DEVOPS CONCEPT
 Controls drift detection behavior
 by selectively ignoring attribute changes.
 +======================================================================+
+
+
+|----------------------------------------------------------------------------------------------------------------------------|
+
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  #content  = var.file_content
+  content  = "my new file content ${random_pet.mypetname.id}"
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
+
+root@terra:~/introduction# ls
+graph.svg  input.auto.tfvars  main.tf  providers.tf  terraform.tfstate  terraform.tfstate.backup  variables.tf
+root@terra:~/introduction# terraform plan
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1 will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "my new file content MR.content.vulture"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# terraform apply
+random_pet.mypetname: Refreshing state... [id=MR.content.vulture]
+local_file.myfirstfile: Refreshing state... [id=0a0cd87c97d0d36d8ec98c240b3aa48989f04324]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1 will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "my new file content MR.content.vulture"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.myfirstfile1: Creating...
+local_file.myfirstfile1: Creation complete after 0s [id=d38b8d61096ffbd3edc4bbf49280f7b03bbdae17]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+my_pet_name = "MR.content.vulture"
+root@terra:~/introduction# 
+
+### use cases:
+we can use it to prevent deleting the s3 buckets
+or
+if we want to create the ec2 instance, one instance to be created before we destroy previous ec2 instance. 
+etc
+
