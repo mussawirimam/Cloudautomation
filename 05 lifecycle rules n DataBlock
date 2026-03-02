@@ -550,3 +550,163 @@ For example:
 You are creating an EC2 instance and you attempt to add a tag for billing-related operations for your company. However, you do not want Terraform to add new tags or modify existing tags.
 By using lifecycle { ignore_changes = [tags] }, Terraform will ignore any changes made to the tags attribute in the configuration when you run terraform apply. As a result, Terraform will not update the tags on the existing EC2 instance, even if the code has been modified.
 
+==============================================================
+DATA BLOCK
+==============================================================
+### data block is used to read the information from places you want
+### Scenerio, you have a file resource through which you want to read the content. 
+### You can add the Datablock and read the content of that file using member operator in file resource property
+
+cat <<'eod' > mytext.txt
+This is from mytext.txt file
+eod
+
+### so we have created the file, now how to read the contents of it? We will use a DATABLOCK in our code to read the contents of the mytext.txt file 
+
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  #content  = var.file_content
+  content  = "my new file content ${random_pet.mypetname.id}"
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  lifecycle {
+    ignore_changes = [
+      length
+    ]
+  }
+}
+
+data "local_file" "read_mytext" { # <--------- Datablock
+  filename = "mytext.txt"
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
+
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  #content  = var.file_content
+  #content  = "my new file content ${random_pet.mypetname.id}"
+  content = data.local_file.read_mytext.content # <------------- using member access operator to access the attribute reference
+}
+resource "random_pet" "mypetname" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  lifecycle {
+    ignore_changes = [
+      length
+    ]
+  }
+}
+
+data "local_file" "read_mytext" {
+  filename = "mytext.txt"
+}
+
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+eod
+
+root@terra:~/introduction# terraform plan
+random_pet.mypetname: Refreshing state... [id=MR.climbing.deer]
+data.local_file.read_mytext: Reading...
+data.local_file.read_mytext: Read complete after 0s [id=28e982c38e14d6ac1241b48169b6bc61b9cfe8bb]
+local_file.myfirstfile1: Refreshing state... [id=172f0b869b0d41009820e649c0ecb09883a5c675]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1 must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content              = <<-EOT # forces replacement
+          - my new file content MR.climbing.deer
+          + This is from mytext.txt file
+        EOT
+      ~ content_base64sha256 = "S9Tc/34ZnwwdkC5GNiRykI6OKywGPBAOk0CNt+BM4rI=" -> (known after apply)
+      ~ content_base64sha512 = "RnYUYdmWnfZIahKnEBz6UnbGaC3jM3NxCnbXqFdoL21Grx1ewkYVnPEgByTbRsGtrFbRLF60fVlKTxnGRESt1w==" -> (known after apply)
+      ~ content_md5          = "676d782b582bb832159bec0f61ebed89" -> (known after apply)
+      ~ content_sha1         = "172f0b869b0d41009820e649c0ecb09883a5c675" -> (known after apply)
+      ~ content_sha256       = "4bd4dcff7e199f0c1d902e46362472908e8e2b2c063c100e93408db7e04ce2b2" -> (known after apply)
+      ~ content_sha512       = "46761461d9969df6486a12a7101cfa5276c6682de33373710a76d7a857682f6d46af1d5ec246159cf1200724db46c1adac56d12c5eb47d594a4f19c64444add7" -> (known after apply)
+      ~ id                   = "172f0b869b0d41009820e649c0ecb09883a5c675" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# terraform apply
+random_pet.mypetname: Refreshing state... [id=MR.climbing.deer]
+data.local_file.read_mytext: Reading...
+data.local_file.read_mytext: Read complete after 0s [id=28e982c38e14d6ac1241b48169b6bc61b9cfe8bb]
+local_file.myfirstfile1: Refreshing state... [id=172f0b869b0d41009820e649c0ecb09883a5c675]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1 must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content              = <<-EOT # forces replacement
+          - my new file content MR.climbing.deer
+          + This is from mytext.txt file
+        EOT
+      ~ content_base64sha256 = "S9Tc/34ZnwwdkC5GNiRykI6OKywGPBAOk0CNt+BM4rI=" -> (known after apply)
+      ~ content_base64sha512 = "RnYUYdmWnfZIahKnEBz6UnbGaC3jM3NxCnbXqFdoL21Grx1ewkYVnPEgByTbRsGtrFbRLF60fVlKTxnGRESt1w==" -> (known after apply)
+      ~ content_md5          = "676d782b582bb832159bec0f61ebed89" -> (known after apply)
+      ~ content_sha1         = "172f0b869b0d41009820e649c0ecb09883a5c675" -> (known after apply)
+      ~ content_sha256       = "4bd4dcff7e199f0c1d902e46362472908e8e2b2c063c100e93408db7e04ce2b2" -> (known after apply)
+      ~ content_sha512       = "46761461d9969df6486a12a7101cfa5276c6682de33373710a76d7a857682f6d46af1d5ec246159cf1200724db46c1adac56d12c5eb47d594a4f19c64444add7" -> (known after apply)
+      ~ id                   = "172f0b869b0d41009820e649c0ecb09883a5c675" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 1 to add, 0 to change, 1 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.myfirstfile1: Destroying... [id=172f0b869b0d41009820e649c0ecb09883a5c675]
+local_file.myfirstfile1: Destruction complete after 0s
+local_file.myfirstfile1: Creating...
+local_file.myfirstfile1: Creation complete after 0s [id=28e982c38e14d6ac1241b48169b6bc61b9cfe8bb]
+
+Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
+
+Outputs:
+
+my_pet_name = "MR.climbing.deer"
+root@terra:~/introduction# 
+
+root@terra:~/introduction# ls
+dev-autofromfile.txt  input.auto.tfvars  mytext.txt    terraform.tfstate         variables.tf
+graph.svg             main.tf            providers.tf  terraform.tfstate.backup
+root@terra:~/introduction# cat dev-autofromfile.txt 
+This is from mytext.txt file
+root@terra:~/introduction# 
