@@ -94,6 +94,8 @@ random_pet.mypetname: Refreshing state... [id=MR.
 ...
 
 IMPLICIT VS EXPLICIT DEPENDENCY
+
+### IMPLICIT DEPENDENCY FOLLOWS SEQUENE 2 THEN 1 THEN 3
 ### there is a dependency for which resrouce random_pet will be generated first to be placed as interpolation sequence in resrouce local_file. e.g sequence 2 then 1 then 3
 cat <<'eod' > main.tf 
 ### resource
@@ -123,32 +125,48 @@ output "my_pet_name" {
   value = random_pet.mypetname.id
 }
 eod
+
+### NO DEPENDENCY FOLLOWS SEQUENCE 1 THEN 2 THEN 3 
 ### there are no dependencies in this case. It will first create the file resource and then random petname. e.g sequence 1 then 2 then 3
+cat <<'eod' > output.tf
+output "my_pet_name" {
+    value = random_pet.mypetname1.id
+}
+eod
+
 cat <<'eod' > main.tf 
 ### resource
 resource "local_file" "myfirstfile1" {
   filename = var.filename
+  content = "hello guys welcome to my file"  
   #content  = var.file_content
   #content  = "my new file content ${random_pet.mypetname.id}"
-  content = "threre are no dependencies, so it will follow a normal sequence"
-}
-resource "random_pet" "mypetname" {
-  length    = 2
-  prefix    = "MR"
-  separator = "."
-  lifecycle {
-    ignore_changes = [
-      length
-    ]
-  }
 }
 
-data "local_file" "read_mytext" {
-  filename = "mytext.txt"
+resource "random_pet" "mypetname1" {
+  length    = 1
+  prefix    = "MR"
+  separator = "."
+}
+
+/*resource "random_pet" "mypetname" {
+  length    = 3
+  prefix    = "MR"
+  separator = "."
+}
+
+resource "random_pet" "mypetname2" {
+  length    = 10
+  prefix    = "MR"
+  separator = "."
 }
 
 ### output block
 output "my_pet_name" {
   value = random_pet.mypetname.id
 }
+*/
 eod
+
+### EXPLICIT DEPENDENCY:
+Q: How can I make the dependency explicit? 
