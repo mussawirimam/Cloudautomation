@@ -242,6 +242,88 @@ Controls drift detection behavior
 by selectively ignoring attribute changes.
 +======================================================================+
 
++======================================================================+
+|                     TERRAFORM DATA BLOCK (data)                      |
++======================================================================+
+
+WHAT IT IS
+----------
+A data block is used to FETCH information from existing infrastructure
+or external sources.
+
+It does NOT create resources.
+It only READS data.
+
+
+SYNTAX
+------
+
+data "<PROVIDER>_<TYPE>" "<NAME>" {
+  argument = value
+}
+
+
+EXAMPLE 1: Fetch Latest AMI
+---------------------------
+
+data "aws_ami" "latest_amazon_linux" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*"]
+  }
+
+  owners = ["amazon"]
+}
+
+Use it inside a resource:
+
+resource "aws_instance" "app" {
+  ami           = data.aws_ami.latest_amazon_linux.id
+  instance_type = "t3.medium"
+}
+
+
+WHAT IS HAPPENING
+-----------------
+1) Terraform queries AWS
+2) Finds the latest matching AMI
+3) Stores it in memory
+4) Resource uses the fetched value
+
+
+KEY DIFFERENCE
+--------------
+
+RESOURCE BLOCK
+-> Creates, updates, destroys infrastructure
+
+DATA BLOCK
+-> Reads existing infrastructure
+-> No create / no destroy
+
+
+REAL-WORLD ANALOGY
+------------------
+Resource = Building a new house
+Data     = Looking up an existing house address
+
+
+WHEN TO USE
+-----------
+- Fetch latest AMIs
+- Reference existing VPCs
+- Use existing security groups
+- Get current account info
+
+
+DEVOPS CONCEPT
+--------------
+Data blocks enable dynamic, reusable, and environment-aware
+infrastructure without hardcoding values.
++======================================================================+
+
 
 |----------------------------------------------------------------------------------------------------------------------------|
 
