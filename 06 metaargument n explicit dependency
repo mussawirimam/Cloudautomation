@@ -819,6 +819,7 @@ LENGTH FUCTION TO SOLVE LIST ISSUE
 ### lets say you want to have multiple list of strings in your variables as file 1,2,3,4,5 etc and if the count is not specified with the exact number of resource that needs to be created
 ### the code will fail.
 ### for that reason we use the LENGTH FUNCTION:
+### we are adding length function so that, our resource is dynamically setup for passing the list of files in our resource
 
 cat <<'eod' > variables.tf 
 variable "filename" {
