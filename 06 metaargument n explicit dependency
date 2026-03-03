@@ -322,3 +322,302 @@ root@terra:~/introduction#
 There are two dependency types: 
 Implicity is something Terraform takes care of
 Explicit is something you have mention 
+
+
+|----------------------------------------------------------|
+COUNT META ARGUMENT
+===================
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename
+  content = "hello guys welcome to my file"
+  count = 3 ### this will create three files    #<-------------------
+  #content  = var.file_content
+  #content  = "my new file content ${random_pet.mypetname.id}"
+}
+
+resource "random_pet" "mypetname1" {
+  length    = 1
+  prefix    = "MR"
+  separator = "."
+}
+
+resource "random_pet" "mypetname3" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  depends_on = [
+    random_pet.mypetname1
+  ]  
+}
+
+resource "random_pet" "mypetname2" {
+  length    = 10
+  prefix    = "MR"
+  separator = "."
+}
+/*
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+*/ 
+eod
+
+root@terra:~/introduction# terraform plan
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1[0] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # local_file.myfirstfile1[1] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # local_file.myfirstfile1[2] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # random_pet.mypetname1 will be created
+  + resource "random_pet" "mypetname1" {
+      + id        = (known after apply)
+      + length    = 1
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+  # random_pet.mypetname2 will be created
+  + resource "random_pet" "mypetname2" {
+      + id        = (known after apply)
+      + length    = 10
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+  # random_pet.mypetname3 will be created
+  + resource "random_pet" "mypetname3" {
+      + id        = (known after apply)
+      + length    = 2
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy. #<------------- because there are 6 resrouces to add since we have added the count 3 to our resrouce block as well
+
+Changes to Outputs:
+  + my_pet_name = (known after apply)
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# 
+
+root@terra:~/introduction# terraform apply 
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1[0] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # local_file.myfirstfile1[1] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # local_file.myfirstfile1[2] will be created
+  + resource "local_file" "myfirstfile1" {
+      + content              = "hello guys welcome to my file"
+      + content_base64sha256 = (known after apply)
+      + content_base64sha512 = (known after apply)
+      + content_md5          = (known after apply)
+      + content_sha1         = (known after apply)
+      + content_sha256       = (known after apply)
+      + content_sha512       = (known after apply)
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "dev-autofromfile.txt"
+      + id                   = (known after apply)
+    }
+
+  # random_pet.mypetname1 will be created
+  + resource "random_pet" "mypetname1" {
+      + id        = (known after apply)
+      + length    = 1
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+  # random_pet.mypetname2 will be created
+  + resource "random_pet" "mypetname2" {
+      + id        = (known after apply)
+      + length    = 10
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+  # random_pet.mypetname3 will be created
+  + resource "random_pet" "mypetname3" {
+      + id        = (known after apply)
+      + length    = 2
+      + prefix    = "MR"
+      + separator = "."
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + my_pet_name = (known after apply)
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+random_pet.mypetname1: Creating...
+random_pet.mypetname2: Creating...
+random_pet.mypetname1: Creation complete after 0s [id=MR.goblin]
+random_pet.mypetname2: Creation complete after 0s [id=MR.jolly.slowly.rarely.actually.generally.informally.widely.enormously.neutral.bass]
+local_file.myfirstfile1[0]: Creating...
+random_pet.mypetname3: Creating...
+local_file.myfirstfile1[2]: Creating...
+random_pet.mypetname3: Creation complete after 0s [id=MR.smiling.stud]
+local_file.myfirstfile1[1]: Creating...
+local_file.myfirstfile1[2]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[0]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[1]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+
+Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+my_pet_name = "MR.goblin"
+root@terra:~/introduction# 
+
+### we will only see one file, because we havent parse the argument inputs 
+my_pet_name = "MR.goblin"
+root@terra:~/introduction# ls
+dev-autofromfile.txt  input.auto.tfvars  mytext.txt  providers.tf       terraform.tfstate.backup
+graph.svg             main.tf            output.tf   terraform.tfstate  variables.tf
+root@terra:~/introduction# 
+root@terra:~/introduction# cat mytext.txt 
+This is from mytext.txt file
+root@terra:~/introduction# 
+
+### we will create another variable
+cat <<'eod' > variables.tf 
+variable "filename" {
+  #default = "myfile.txt"
+  type        = string
+  description = "Name of the file to create"
+  # validation block
+  validation {
+    condition     = substr(var.filename, 0, 4) == "dev-"
+    error_message = "The value must be starting with dev-"
+  }
+}
+
+### variables ### we will pas this in main.tf as var.filename_list
+variable "filename_list" {
+  type        = list
+  description = "Name of the file to create"
+  ### we will add a default as the list
+  default = [
+    "myfirstfile.txt",
+    "mysecondfile.txt",
+    "mythirdfile.txt"
+  ]
+}
+
+variable "file_content" {
+  default = "This is the first file created using terraform"
+  type = string
+  # for datatypes, we can use: string, number, bool, list(), map()
+  description = "The content of the file"
+}
+eod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
