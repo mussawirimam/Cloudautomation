@@ -561,7 +561,7 @@ Outputs:
 my_pet_name = "MR.goblin"
 root@terra:~/introduction# 
 
-### we will only see one file, because we havent parse the argument inputs 
+### we will only see one file, because we havent pass any values to the list of files
 my_pet_name = "MR.goblin"
 root@terra:~/introduction# ls
 dev-autofromfile.txt  input.auto.tfvars  mytext.txt  providers.tf       terraform.tfstate.backup
@@ -571,7 +571,7 @@ root@terra:~/introduction# cat mytext.txt
 This is from mytext.txt file
 root@terra:~/introduction# 
 
-### we will create another variable
+### we will add  another variable
 cat <<'eod' > variables.tf 
 variable "filename" {
   #default = "myfile.txt"
@@ -584,7 +584,7 @@ variable "filename" {
   }
 }
 
-### variables ### we will pas this in main.tf as var.filename_list
+### variables ### we will pass this list in main.tf as var.filename_list
 variable "filename_list" {
   type        = list
   description = "Name of the file to create"
@@ -604,10 +604,214 @@ variable "file_content" {
 }
 eod
 
+### why did we get the Error? because in the resource variable list, we have not specified the list that is being passed as the index in main.tf, the code still cant access the list.
+### we have to add filename = var.filename_list[count.index] <----- to access the list iteration
+root@terra:~/introduction# terraform plan
+╷
+│ Error: Incorrect attribute value type
+│ 
+│   on main.tf line 3, in resource "local_file" "myfirstfile1":
+│    3:   filename = var.filename_list ### we are passing 3 list of files from the variables.tf file. There are three items not a single value
+│     ├────────────────
+│     │ var.filename_list is a list of dynamic
+│ 
+│ Inappropriate value for attribute "filename": string required, but have list of dynamic.
+╵
+root@terra:~/introduction# 
 
 
+### since I have added count.index in the as the list, it will start from 0 to 2 
+### it will automatically iterate the values from the variable list for the filename_list[...]
+cat <<'eod' > main.tf 
+### resource
+resource "local_file" "myfirstfile1" {
+  filename = var.filename_list[count.index] ### we are passing 3 list of files from the variables.tf file. There are three items not a single value
+  content = "hello guys welcome to my file"
+  count = 3 ### this will create three files    
+  #content  = var.file_content
+  #content  = "my new file content ${random_pet.mypetname.id}"
+}
 
+resource "random_pet" "mypetname1" {
+  length    = 1
+  prefix    = "MR"
+  separator = "."
+}
 
+resource "random_pet" "mypetname3" {
+  length    = 2
+  prefix    = "MR"
+  separator = "."
+  depends_on = [
+    random_pet.mypetname1
+  ]  
+}
+
+resource "random_pet" "mypetname2" {
+  length    = 10
+  prefix    = "MR"
+  separator = "."
+}
+/*
+### output block
+output "my_pet_name" {
+  value = random_pet.mypetname.id
+}
+*/ 
+eod
+
+root@terra:~/introduction# terraform plan
+local_file.myfirstfile1[0]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[2]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+random_pet.mypetname1: Refreshing state... [id=MR.goblin]
+random_pet.mypetname2: Refreshing state... [id=MR.jolly.slowly.rarely.actually.generally.informally.widely.enormously.neutral.bass]
+local_file.myfirstfile1[1]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+random_pet.mypetname3: Refreshing state... [id=MR.smiling.stud]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1[0] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "myfirstfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # local_file.myfirstfile1[1] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "mysecondfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # local_file.myfirstfile1[2] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "mythirdfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 3 to add, 0 to change, 3 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.
+root@terra:~/introduction# ls
+dev-autofromfile.txt  input.auto.tfvars  mytext.txt  providers.tf       terraform.tfstate.backup
+graph.svg             main.tf            output.tf   terraform.tfstate  variables.tf
+root@terra:~/introduction# terraform apply
+random_pet.mypetname1: Refreshing state... [id=MR.goblin]
+random_pet.mypetname2: Refreshing state... [id=MR.jolly.slowly.rarely.actually.generally.informally.widely.enormously.neutral.bass]
+local_file.myfirstfile1[0]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[1]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+random_pet.mypetname3: Refreshing state... [id=MR.smiling.stud]
+local_file.myfirstfile1[2]: Refreshing state... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # local_file.myfirstfile1[0] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "myfirstfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # local_file.myfirstfile1[1] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "mysecondfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+  # local_file.myfirstfile1[2] must be replaced
+-/+ resource "local_file" "myfirstfile1" {
+      ~ content_base64sha256 = "n/7e94Tp2G+Tdf7nvzAJddh66ZaV4MdoJjRQ5NwLyAc=" -> (known after apply)
+      ~ content_base64sha512 = "0ui1mokurFVwyhf9l/6Wuv5sMWJDCfk6Tb8UIpHPRKmmms25Xm6xPdm3BJwNMSrrnvReJqrW75B6G56wyGHb9g==" -> (known after apply)
+      ~ content_md5          = "98ffc8374a9c318bfa2511e7f45993fa" -> (known after apply)
+      ~ content_sha1         = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+      ~ content_sha256       = "9ffedef784e9d86f9375fee7bf300975d87ae99695e0c768263450e4dc0bc807" -> (known after apply)
+      ~ content_sha512       = "d2e8b59a892eac5570ca17fd97fe96bafe6c31624309f93a4dbf142291cf44a9a69acdb95e6eb13dd9b7049c0d312aeb9ef45e26aad6ef907a1b9eb0c861dbf6" -> (known after apply)
+      ~ filename             = "dev-autofromfile.txt" -> "mythirdfile.txt" # forces replacement
+      ~ id                   = "101b3115b1f84edff55d9e7819bf22bfcfd77e1d" -> (known after apply)
+        # (3 unchanged attributes hidden)
+    }
+
+Plan: 3 to add, 0 to change, 3 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+local_file.myfirstfile1[2]: Destroying... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[0]: Destroying... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[1]: Destroying... [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[2]: Destruction complete after 0s
+local_file.myfirstfile1[0]: Destruction complete after 0s
+local_file.myfirstfile1[1]: Destruction complete after 0s
+local_file.myfirstfile1[0]: Creating...
+local_file.myfirstfile1[0]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[2]: Creating...
+local_file.myfirstfile1[1]: Creating...
+local_file.myfirstfile1[2]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+local_file.myfirstfile1[1]: Creation complete after 0s [id=101b3115b1f84edff55d9e7819bf22bfcfd77e1d]
+
+Apply complete! Resources: 3 added, 0 changed, 3 destroyed.
+
+Outputs:
+
+my_pet_name = "MR.goblin"
+root@terra:~/introduction# ls
+graph.svg          main.tf          mysecondfile.txt  mythirdfile.txt  providers.tf       terraform.tfstate.backup
+input.auto.tfvars  myfirstfile.txt  mytext.txt        output.tf        terraform.tfstate  variables.tf
+root@terra:~/introduction# 
+root@terra:~/introduction# cat myfirstfile.txt 
+hello guys welcome to my file
+root@terra:~/introduction# cat mysecondfile.txt 
+hello guys welcome to my file
+root@terra:~/introduction# cat mythirdfile.txt 
+hello guys welcome to my file
+root@terra:~/introduction# 
 
 
 
