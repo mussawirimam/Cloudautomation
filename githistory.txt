@@ -1,347 +1,150 @@
- 1384  git
- 1387  curl https://github.com/mussawirimam/Cloudautomation.git
- 1390  git config
- 1391  git config --global
- 1393  git config --global
- 1401  git init
- 1404  git -rf .git
- 1405  rm -rf .git
- 1408  git
- 1413  mkdir gittesting
- 1415  cd gittesting/
- 1416  git clone https://github.com/kodekloudhub/kubernetes-devops-security.git
- 1424  rm -rf gittesting/
- 1425  mkdir gittesting
- 1426  cd gittesting/
- 1429  git init
- 1430  git clone https://github.com/mussawirimam/testing.git
- 1435  git -m "hello"
- 1436  git commit -m "hello"
- 1437  git config --global user.email "mussawirimam@gmail.com"
- 1438  git config --global user.name "mussawirimam"
- 1439  git push
- 1440  git destroy
- 1442  git push
- 1443  git remote -v
- 1444  git config --global --unset credential.helper
- 1445  rm -rf ~/.git-credentials
- 1446  git push
- 1447  git push -u origin main
- 1448  git branch
- 1449  git push 
- 1450  git push -u origin main
- 1452  git commit -m 
- 1453  git commit -m "hello"
- 1454  git push
- 1457  git remove -v
- 1458  git remote -v
- 1459  cat ~/.git-credentials
- 1460  ls ~/.git-credentials
- 1463  cd .git
- 1478  git config --global credential.helper
- 1480  git config --global credential.helper
- 1482  git config user.name
- 1483  git config user.email
- 1484  man git
- 1485  git remote -v
- 1494  git push
- 1496  git commit -m "update"
- 1497  git add *
- 1498  git commit -m "update"
- 1499  git push
- 1501  git config --global --unset credential.helper
- 1502  rm -f ~/.git-credentials
- 1503  git credential-cache exit
- 1504  git remote -v
- 1508  git remote set-url origin git@github.com:mussawirimam/testing.git
- 1509  ssh -T git@github.com
- 1511  git push -u origin main
- 1514  git branch my-new-branch
- 1515  git branch
- 1516  git branch my-new-branch 
- 1517  git branch
- 1518  git checkout my-new-branch 
- 1525  git add *
- 1526  git commit -m
- 1527  git commit -m "new branch"
- 1528  git push 
- 1529  git push --set-upstream origin my-new-branch
- 1532  git log my-new-branch 
- 1534  git diff main..my-new-branch 
- 1536  git branch
- 1537  git checkout main 
- 1538  git pull
- 1540  git pull origin main
- 1541  git push 
- 1542  git merge my-new-branch 
- 1543  git push origin main
- 1544  git branch -d my-new-branch 
- 1545  git push origin --delete my-new-branch
- 1552  git 
- 1554  git branch
- 1560  git config --global credential.helper
- 1562  git remote get-url origin
- 1565  cd gittesting/
- 1566  git remote get-url origin
- 1567  git remote -v
- 1570  git push
- 1575  git remote get-url origin
- 1599  cd gittesting/
- 1601  git branch
- 1602  git remote -v
- 1603  git config --global --unset credential.helper
- 1604  git config user.name
- 1605  git push -u origin main
- 1606  git clone git@github.com:mussawirimam/testing.git
- 1609  rm -rf .git/
- 1610  git init 
- 1611  git clone git@github.com:mussawirimam/testing.git
- 1618  git add *
- 1619  git commit -m "push"
- 1620  git push origin main
- 1627  mkdir gittesting2
- 1628  cd gittesting2
- 1631  git push
- 1632  git init
- 1634  git push 
- 1635  git remote add origin git@github.com:mussawirimam/testing.git
- 1636  git remote -v
- 1637  git remote remove origin
- 1638  git remote -v
- 1639  git remote add origin git@github.com:mussawirimam/testing.git
- 1640  git push 
- 1641  git branch
- 1642  git push -u origin main
- 1643  git branch
- 1645  git pull 
- 1649  git add *
- 1650  git commit -m "helllo"
- 1651  git push
- 1652  git push --set-upstream origin main
- 1653  git pull
- 1664  cd gittesting2/
- 1665  git add *
- 1667  git commit -m 
- 1668  git commit -m "push"
- 1669  git push 
- 1670  git push --set-upstream origin main
- 1671  git push -u origin master
- 1672  git branch
- 1674  git fetch origin
- 1675  git branch -r
- 1677  git pull
- 1679  git branch main
- 1681  git branch
- 1682  git check out main
- 1683  git checkout main
- 1684  git pull
- 1685  git branch --set-upstream-to=origin/master master
- 1686  git branch --set-upstream-to=origin/main main
- 1687  git pull
- 1689  git config pull.rebase true
- 1690  git pull
- 1694  rm -rf gittesting2/
- 1696  mkdir gittesting2
- 1697  history |grep git
- 1700  git clone git@github.com:mussawirimam/Github101.git
- 1707  history|grep git
- 1712  history|grep git > ruffhistory1.txt 
- 1717  git add *
- 1718  git commit -m "push"
- 1719  git push
- 1723  cd .git
- 1739  git status
- 1741  git status
- 1742  git branch
- 1743  git fetch
- 1747  cd gittesting2
- 1750  cd gittesting
- 1755  git origin
- 1756  git origin -v
- 1757  git remote -v
- 1759  git diff main origin/main
- 1760  git diff
- 1762  git fetch
- 1766  git branch -v
- 1773  git remote -u
- 1774  git config
- 1775  git remote -v
- 1781  rm -rf gittesting
- 1782  rm -rf gittesting2/
- 1807  git clone git@github.com:mussawirimam/Cloudautomation.git
- 1813  git init
- 1814  git branch
- 1815  git clone git@github.com:mussawirimam/Cloudautomation.git
- 1816  git remote -v
- 1817  git add *
- 1819  git commit -m "push"
- 1820  git push
- 1821  git remote main git@github.com:mussawirimam/Cloudautomation.git
- 1822  git remote add git@github.com:mussawirimam/Cloudautomation.git
- 1823  git remote add main git@github.com:mussawirimam/Cloudautomation.git
- 1824  git remote -v
- 1825  git push
- 1826  git push --set-upstream main 
- 1829  git fetch
- 1830  git branch
- 1831  git push
- 1832  git config pull.rebase true
- 1833  git fetch
- 1834  git push
- 1835  git branch --set-upstream-to=origin/main main
- 1836  git push
- 1837  git fetch origin
- 1839  git fetch origin
- 1841  git branch -r
- 1842  git branch -a
- 1843  git checkout -b branch-name origin/main
- 1844  git checkout -b branch-name origin/main/main
- 1845  git checkout -b branch-name main/main
- 1846  git remote add origin git@github.com:mussawirimam/Cloudautomation.git
- 1847  git branch
- 1848  git checkout master
- 1849  git branch --delete branch-name
- 1855  git push origin master
- 1856  git add *
- 1858  git commit -m "push all"
- 1859  git push
- 1860  git checkout main
- 1861  git branch
- 1862  git add .
- 1863  git commit
- 1864  git push origin main
- 1865  git push origin main --force
- 1866  git checkout master
- 1867  git reset --hard main
- 1868  git push origin master --force
- 1869  git rm -r --cached .terraform
- 1870  git commit -m "Remove terraform generated files"
- 1871  git add *
- 1872  git push
- 1892  git pull git@github.com:mussawirimam/Cloudautomation.git
- 1893  git git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
- 1894  git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
- 1895  git init
- 1896  git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
- 1899  git remote -v
- 1900  ssh -T git@github.com
- 1901  git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
- 1902  git remote set-url origin main git@github.com:mussawirimam/Cloudautomation.git
- 1903  git remote set-url main git@github.com:mussawirimam/Cloudautomation.git
- 1904  git remote add origin  git@github.com:mussawirimam/Cloudautomation.git
- 1905  git remote add origin git@github.com:mussawirimam/Cloudautomation.git
- 1906  git remote -v
- 1907  git branch
- 1908  git config pull.rebase true
- 1909  git branch
- 1910  git fetch
- 1911  git fetch origin
- 1912  git branch
- 1913  git config pull.rebase true
- 1914  git branch
- 1915  git fetch
- 1916  git pull
- 1917  git branch --set-upstream-to=origin/main main
- 1918  git checkout -b main origin/main
- 1919  git branch
- 1921  git add *
- 1922  git commit -m "push new"
- 1923  git push
- 1924  git push --force
- 1957  git fetch 
- 1965  git pull
- 1966  git fetch --force
- 1968  git pull --force
- 1976  git pull 
- 1978  git status
- 1979  git add .
- 1980  git commit -m "testing"
- 1983  git pull 
- 1985  git restore .
- 1988  git pull 
- 1989  git pull --force
- 1994  git pull
- 1995  git status
- 1996  git add .
- 1997  git restore .
- 1999  git config pull.rebase false
- 2000  git pull
- 2002  git pull --force
- 2003  git restore .
- 2004  git add .
- 2005  git commit -m "remove folder"
- 2006  git pull
- 2008  git branch
- 2009  git restore introduction/
- 2010  git restore introduction
- 2011  git restore 
- 2012  git restore .
- 2014  git pull
- 2015  git checkout -- .
- 2016  git branch
- 2017  git fetch origin
- 2020  git fetch origin git fetch origin
- 2021  git checkout origin/main -- introduction/
- 2022  git fetch origin
- 2023  git checkout origin/main -- introduction/
- 2029  git fetch origin
- 2031  git checkout origin/main
- 2033  git pull
- 2034  git pull .
- 2035  git checkout origin/main -- introduction /
- 2037  git checkout main
- 2040  git checkout origin/main -- introduction/
- 2043  git checkout origin/main *
- 2047  git checkout origin/main *
- 2049  git checkout origin/main -- *
- 2052  git checkout origin/main -- */
- 2054  git restore
- 2055  git restore .
- 2060  git restore --source origin/main introduction/
- 2066  mkdir github101
- 2067  git init .
- 2069  git add origin
- 2070  git --add 
- 2071  git --add |grep origin
- 2072  git --add origin
- 2073  git origin
- 2074  git add origin git@github.com:mussawirimam/Github101.git
- 2075  git add remote origin git@github.com:mussawirimam/Github101.git
- 2076  git remote origin git@github.com:mussawirimam/Github101.git
- 2077  git remote add git@github.com:mussawirimam/Github101.git
- 2078  git remote -v
- 2079  git remote add main git@github.com:mussawirimam/Github101.git
- 2080  git remote -v
- 2083  rm -rf .git
- 2085  git remote -v
- 2086  cd github101/
- 2089  git add remote
- 2090  git add
- 2091  git remote
- 2092  git init .
- 2093  git remote add
- 2094  git remote 
- 2096  git remote -v
- 2097  git add 
- 2098  git add remote
- 2100  git remote
- 2101  git remote --help
- 2102  git remote add main git@github.com:mussawirimam/Github101.git
- 2103  git remote -v
- 2104  git pull
- 2106  git fetch
- 2108  git pull
- 2109  git pull .
- 2110  git pull git@github.com:mussawirimam/Github101.git
- 2111  git branch
- 2112  git checkout -b main origin/main
- 2113  git branch
- 2114  git pull origin main git@github.com:mussawirimam/Github101.git
- 2117  git branch
- 2121  git push
- 2122  git add .
- 2124  git commit -m "push"
- 2125  git push 
- 2126  git push -u main master
- 2133  history |grep git
- 2137  history |grep git > githistory.txt
+cat ~/.git-credentials
+cd .git
+curl https://github.com/mussawirimam/Cloudautomation.git
+git
+git --add
+git --add |grep origin
+git --add origin
+git -m "hello"
+git -rf .git
+git add
+git add .
+git add *
+git add origin
+git add origin git@github.com:mussawirimam/Github101.git
+git add remote
+git add remote origin git@github.com:mussawirimam/Github101.git
+git branch
+git branch --delete branch-name
+git branch --set-upstream-to=origin/main main
+git branch --set-upstream-to=origin/master master
+git branch -a
+git branch -d my-new-branch
+git branch -r
+git branch -v
+git branch main
+git branch my-new-branch
+git check out main
+git checkout -- .
+git checkout -b branch-name main/main
+git checkout -b branch-name origin/main
+git checkout -b branch-name origin/main/main
+git checkout -b main origin/main
+git checkout main
+git checkout master
+git checkout my-new-branch
+git checkout origin/main
+git checkout origin/main -- *
+git checkout origin/main -- */
+git checkout origin/main -- introduction /
+git checkout origin/main -- introduction/
+git checkout origin/main *
+git clone git@github.com:mussawirimam/Cloudautomation.git
+git clone git@github.com:mussawirimam/Github101.git
+git clone git@github.com:mussawirimam/testing.git
+git clone https://github.com/kodekloudhub/kubernetes-devops-security.git
+git clone https://github.com/mussawirimam/testing.git
+git commit
+git commit -m
+git commit -m "helllo"
+git commit -m "hello"
+git commit -m "new branch"
+git commit -m "push all"
+git commit -m "push new"
+git commit -m "push"
+git commit -m "remove folder"
+git commit -m "Remove terraform generated files"
+git commit -m "testing"
+git commit -m "update"
+git config
+git config --global
+git config --global --unset credential.helper
+git config --global credential.helper
+git config --global user.email "mussawirimam@gmail.com"
+git config --global user.name "mussawirimam"
+git config pull.rebase false
+git config pull.rebase true
+git config user.email
+git config user.name
+git credential-cache exit
+git destroy
+git diff
+git diff main origin/main
+git diff main..my-new-branch
+git fetch
+git fetch --force
+git fetch origin
+git fetch origin git fetch origin
+git git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
+git init
+git init .
+git log my-new-branch
+git merge my-new-branch
+git origin
+git origin -v
+git pull
+git pull --force
+git pull .
+git pull git@github.com:mussawirimam/Cloudautomation.git
+git pull git@github.com:mussawirimam/Github101.git
+git pull origin main
+git pull origin main git@github.com:mussawirimam/Github101.git
+git push
+git push --force
+git push --set-upstream main
+git push --set-upstream origin main
+git push --set-upstream origin my-new-branch
+git push -u main master
+git push -u origin main
+git push -u origin master
+git push origin --delete my-new-branch
+git push origin main
+git push origin main --force
+git push origin master
+git push origin master --force
+git remote
+git remote --help
+git remote -u
+git remote -v
+git remote add
+git remote add git@github.com:mussawirimam/Cloudautomation.git
+git remote add git@github.com:mussawirimam/Github101.git
+git remote add main git@github.com:mussawirimam/Cloudautomation.git
+git remote add main git@github.com:mussawirimam/Github101.git
+git remote add origin  git@github.com:mussawirimam/Cloudautomation.git
+git remote add origin git@github.com:mussawirimam/Cloudautomation.git
+git remote add origin git@github.com:mussawirimam/testing.git
+git remote get-url origin
+git remote main git@github.com:mussawirimam/Cloudautomation.git
+git remote origin git@github.com:mussawirimam/Github101.git
+git remote remove origin
+git remote set-url main git@github.com:mussawirimam/Cloudautomation.git
+git remote set-url origin git@github.com:mussawirimam/Cloudautomation.git
+git remote set-url origin git@github.com:mussawirimam/testing.git
+git remote set-url origin main git@github.com:mussawirimam/Cloudautomation.git
+git remove -v
+git reset --hard main
+git restore
+git restore --source origin/main introduction/
+git restore .
+git restore introduction
+git restore introduction/
+git rm -r --cached .terraform
+git status
+history |grep git
+history |grep git > githistory.txt
+history|grep git
+history|grep git > ruffhistory1.txt
+ls ~/.git-credentials
+man git
+mkdir github101
+mkdir gittesting
+mkdir gittesting2
+rm -f ~/.git-credentials
+rm -rf .git
+rm -rf .git/
+rm -rf ~/.git-credentials
+rm -rf gittesting
+rm -rf gittesting/
+rm -rf gittesting2/
+ssh -T git@github.com
