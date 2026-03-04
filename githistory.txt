@@ -124,17 +124,19 @@ git remote set-url origin git@github.com:mussawirimam/testing.git
 git remote set-url origin main git@github.com:mussawirimam/Cloudautomation.git
 git remove -v
 git reset --hard main
+
+### to restore deleted item
 git restore
 git restore --source origin/main introduction/
 git restore .
 git restore introduction
 git restore introduction/
+
 git rm -r --cached .terraform
 git status
-history |grep git
+
 history |grep git > githistory.txt
-history|grep git
-history|grep git > ruffhistory1.txt
+
 ls ~/.git-credentials
 man git
 mkdir github101
@@ -148,3 +150,16 @@ rm -rf gittesting
 rm -rf gittesting/
 rm -rf gittesting2/
 ssh -T git@github.com
+
+### steps on main branch in local system
+git branch
+* main
+git pull origin main
+git fetch origin
+git checkout -b main origin/main
+git switch -c main origin/main
+
+### You can do a “safe pull” using fetch + merge manually:
+git fetch origin
+git log HEAD..origin/main   # see incoming changes
+git merge origin/main       # merge manually
