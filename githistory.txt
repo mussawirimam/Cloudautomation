@@ -163,3 +163,51 @@ git switch -c main origin/main
 git fetch origin
 git log HEAD..origin/main   # see incoming changes
 git merge origin/main       # merge manually
+
+
+
+
+
+### ERRORS THIS AND THAT
+ERROR
+root@terra:~/cloudautomation# git push 
+To github.com:mussawirimam/Cloudautomation.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'github.com:mussawirimam/Cloudautomation.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+root@terra:~/cloudautomation# git fetch
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 1.72 KiB | 588.00 KiB/s, done.
+From github.com:mussawirimam/Cloudautomation
+   67457ca..e1b96b5  main       -> origin/main
+root@terra:~/cloudautomation# git push 
+To github.com:mussawirimam/Cloudautomation.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'github.com:mussawirimam/Cloudautomation.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+root@terra:~/cloudautomation# git pull origin main
+From github.com:mussawirimam/Cloudautomation
+ * branch            main       -> FETCH_HEAD
+Merge made by the 'ort' strategy.
+ 06 metaargument n explicit dependency | 80 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+root@terra:~/cloudautomation# git pull origin main
+From github.com:mussawirimam/Cloudautomation
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+root@terra:~/cloudautomation# git branch
+* main
+root@terra:~/cloudautomation# git push
+Enumerating objects: 26, done.
+
+
