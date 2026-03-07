@@ -1,3 +1,4 @@
+### this file will run third as it will be get values from variables.tf file and create resources with it
 ### resource aws_iam_user
 resource "aws_iam_user" "dev_users" {
   for_each = var.usernames
