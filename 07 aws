@@ -657,3 +657,17 @@ name = each.value  →  sets .name = "santosh" on the resource object
 later... each.value.name  →  reads that same "santosh" back
 So yes — .name on the policy side is reading the exact value you assigned with name = each.value on the user side. The resource object "remembers" all its attributes, and .name is one of them.
 **********************************************************************************************
+
+QQQ: if you dont parse the inputs from the users_list.auto.tfvars
+cat <<'eod' > users_list.auto.tfvars
+usernames = ["santosh", "nanda", "asif", "michael"]
+eod
+then you would have to write them inside the code with the default keyword
+
+cat <<'eod > variables.tf
+variable "usernames" {
+    description = "The list of usernames"
+    type        = set(string)
+    default     = ["santosh", "nanda", "asif", "michael"]  # ← use 'default' keyword
+}
+eod
