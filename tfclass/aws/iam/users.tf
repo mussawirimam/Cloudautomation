@@ -1,4 +1,4 @@
-### this file will run third as it will be get values from variables.tf file and create resources with it
+### this file will run third as it will be get values from variables.tf file
 ### resource aws_iam_user
 resource "aws_iam_user" "dev_users" {
   for_each = var.usernames
@@ -13,7 +13,6 @@ resource "aws_iam_user" "dev_users" {
 resource "aws_iam_user_policy" "dev_users_policy" {
   name = "dev_users_policy"
   for_each = aws_iam_user.dev_users              # ← add this
-  
   user = each.value.name  # ← correct reference
 
   policy = <<EOF
