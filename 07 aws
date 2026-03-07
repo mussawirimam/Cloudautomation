@@ -4,14 +4,42 @@ click on IAM Users > click create user (give user name [terraform-santosh]) > cl
 Step 2 (Set permissions):
 click on attach policies directly > search permissions policies called (AdministratorAccess) > click Next
 Step 3 (Review and create):
-rewview and click on (Create user)
+review and click on (Create user)
 
 ### Once the user is created, give it a programmatic access
 Step 1 (access key best practice and alternatives): 
-click on the user Security credentials > click on (Create access key) in Access keys section > select Use case (Command Line Interface (CLI)) > click I understand the above... > click next
+click on the user Security credentials > click on (Create access key) in Access keys section > select Use case (Command Line Interface (CLI)) > click ([tick mark] understand the above recommendation and want to proceed to create an access key.) > click next
 Step 2 (set description tag): 
 we are not setting tag click (Create access key)
 Step 3 (retrieve access keys):
 Copy access key and the secret key as well, and save it on your notepad.
 
+### after you are done with above steps, go to your linux server to configure aws credentials through aws cli
+root@terra:~/cloudautomation/terraform-class# aws configure
+root@terra:~/cloudautomation/terraform-class# aws configure
+AWS Access Key ID [None]: AKxxxxxxxxxxxxx3
+AWS Secret Access Key [None]: kxxxxxxxxxxxxwX
+Default region name [None]: us-east-1
+Default output format [None]: json
+root@terra:~/cloudautomation/terraform-class# 
 
+### now you can do the Terraform command and write the Terraform modules
+### we will start with maintaining the Terraform code for user provisioning. 
+### we will use the meta-argument foreach which is recommended over the count
+###
+So now what I'm going to show you is how to start using the AWS service to provision resources.
+First, let's start with IAM. The reason I want you to start with IAM is because I want you to complete a small homework task today.
+The task is to create multiple users using the list of values that we have provided.
+Now the question is, how do we do that?
+As I mentioned earlier, you can either go with count or for_each. However, for_each is a better approach when you are managing a list of users.
+So what I want you to do is maintain Terraform code for user provisioning.
+To do this, you should create a separate file where you define the list of users that you want to create. Then, Terraform should read this information from the file or from parameters, and based on that list, it should create all the users automatically.
+That is the expected outcome.
+In addition to creating users, you should also be able to:
+Attach policies to the users
+Create custom policies
+Attach those custom policies to the appropriate users
+All of these tasks should be implemented within your Terraform configuration.
+The simplest way to do this is to refer to the Terraform documentation.
+So first, I'm going to create an IAM user using the AWS provider plugin in Terraform. Let me show you how to do that.
+###
