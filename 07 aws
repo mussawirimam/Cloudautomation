@@ -426,3 +426,207 @@ Plan: 8 to add, 0 to change, 0 to destroy.
 Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform
 apply" now.
 root@terra:~/cloudautomation/terraform-class/aws/iam# 
+
+root@terra:~/terraform-class/aws/iam# terraform apply
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_iam_user.dev_users["asif"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "asif"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["michael"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "michael"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["nanda"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "nanda"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["santosh"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "santosh"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user_policy.dev_users_policy["asif"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "asif"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["michael"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "michael"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["nanda"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "nanda"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["santosh"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "santosh"
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_iam_user.dev_users["santosh"]: Creating...
+aws_iam_user.dev_users["nanda"]: Creating...
+aws_iam_user.dev_users["michael"]: Creating...
+aws_iam_user.dev_users["asif"]: Creating...
+aws_iam_user.dev_users["michael"]: Creation complete after 1s [id=michael]
+aws_iam_user.dev_users["asif"]: Creation complete after 1s [id=asif]
+aws_iam_user.dev_users["nanda"]: Creation complete after 1s [id=nanda]
+aws_iam_user.dev_users["santosh"]: Creation complete after 1s [id=santosh]
+aws_iam_user_policy.dev_users_policy["michael"]: Creating...
+aws_iam_user_policy.dev_users_policy["asif"]: Creating...
+aws_iam_user_policy.dev_users_policy["santosh"]: Creating...
+aws_iam_user_policy.dev_users_policy["nanda"]: Creating...
+aws_iam_user_policy.dev_users_policy["nanda"]: Creation complete after 0s [id=nanda:dev_users_policy]
+aws_iam_user_policy.dev_users_policy["asif"]: Creation complete after 0s [id=asif:dev_users_policy]
+aws_iam_user_policy.dev_users_policy["santosh"]: Creation complete after 0s [id=santosh:dev_users_policy]
+aws_iam_user_policy.dev_users_policy["michael"]: Creation complete after 0s [id=michael:dev_users_policy]
+
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+root@terra:~/terraform-class/aws/iam# 
