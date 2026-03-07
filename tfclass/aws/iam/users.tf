@@ -11,9 +11,9 @@ resource "aws_iam_user" "dev_users" {
 
 ### resource aws_iam_user_policy
 resource "aws_iam_user_policy" "dev_users_policy" {
-  name = "dev_users_policy"
+  name = "dev_users_policy" # this is a POLICY'S name, a label for the policy itself
   for_each = aws_iam_user.dev_users              # ← add this
-  user = each.value.name  # ← correct reference
+  user = each.value.name  # ← correct reference # this is telling which IAM user to attach this policy to
 
   policy = <<EOF
 {
