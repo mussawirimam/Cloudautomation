@@ -630,3 +630,30 @@ aws_iam_user_policy.dev_users_policy["michael"]: Creation complete after 0s [id=
 
 Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
 root@terra:~/terraform-class/aws/iam# 
+
+**********************************************************************************************
+QQQ where is user = each.value.name is coming from? 
+is it coming from here  4    name     = each.value1:00 PMYes, exactly! 🎯
+hclresource "aws_iam_user" "dev_users" {
+  for_each = var.usernames
+  name     = each.value        # ← you SET .name here
+}
+hclresource "aws_iam_user_policy" "dev_users_policy" {
+  for_each = aws_iam_user.dev_users
+  user     = each.value.name   # ← you READ .name here
+}
+```
+
+---
+
+The flow is:
+```
+var.usernames = ["santosh", "nanda", ...]
+       ↓
+for_each = var.usernames
+       ↓
+name = each.value  →  sets .name = "santosh" on the resource object
+       ↓
+later... each.value.name  →  reads that same "santosh" back
+So yes — .name on the policy side is reading the exact value you assigned with name = each.value on the user side. The resource object "remembers" all its attributes, and .name is one of them.
+**********************************************************************************************
