@@ -1,0 +1,17 @@
+### steps to create the dedicated Terraform user
+Step 1 (create user): 
+click on IAM Users > click create user (give user name [terraform-santosh]) > click next
+Step 2 (Set permissions):
+click on attach policies directly > search permissions policies called (AdministratorAccess) > click Next
+Step 3 (Review and create):
+rewview and click on (Create user)
+
+### Once the user is created, give it a programmatic access
+Step 1 (access key best practice and alternatives): 
+click on the user Security credentials > click on (Create access key) in Access keys section > select Use case (Command Line Interface (CLI)) > click I understand the above... > click next
+Step 2 (set description tag): 
+we are not setting tag click (Create access key)
+Step 3 (retrieve access keys):
+Copy access key and the secret key as well, and save it on your notepad.
+
+
