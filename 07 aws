@@ -43,3 +43,386 @@ All of these tasks should be implemented within your Terraform configuration.
 The simplest way to do this is to refer to the Terraform documentation.
 So first, I'm going to create an IAM user using the AWS provider plugin in Terraform. Let me show you how to do that.
 ###
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+
+### this command is to validate if the aws command line (aws-cli) is connected to your aws account
+root@terra:~/cloudautomation# aws sts get-caller-identity
+{
+    "UserId": "xxxxxxxxxxxxxx",
+    "Account": "333519902194",
+    "Arn": "arn:aws:iam::333519902194:user/terraform-santhosh"
+}
+root@terra:~/cloudautomation# 
+
+root@terra:~/cloudautomation# cd terraform-class/
+root@terra:~/cloudautomation/terraform-class# mkdir aws
+root@terra:~/cloudautomation/terraform-class# cd aws
+root@terra:~/cloudautomation/terraform-class/aws# 
+root@terra:~/cloudautomation/terraform-class/aws# mkdir iam
+root@terra:~/cloudautomation/terraform-class/aws# cd iam/
+root@terra:~/cloudautomation/terraform-class/aws/iam# touch users.tf
+
+### we are going to start creating the users with terraform
+step 1 
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+step 2
+click in aws documentation search filter for click iam_user > from drop down you will see multiple resoures > click on aws_iam_user
+step 3
+copy the example usage syntax
+### we would use this example syntax below and create our own code to create resources according to our need
+resource "aws_iam_user" "lb" {
+  name = "loadbalancer"
+  path = "/system/"
+
+  tags = {
+    tag-key = "tag-value"
+  }
+}
+
+resource "aws_iam_access_key" "lb" {
+  user = aws_iam_user.lb.name
+}
+
+data "aws_iam_policy_document" "lb_ro" {
+  statement {
+    effect    = "Allow"
+    actions   = ["ec2:Describe*"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_user_policy" "lb_ro" {
+  name   = "test"
+  user   = aws_iam_user.lb.name
+  policy = data.aws_iam_policy_document.lb_ro.json
+}
+
+### Resource exampe syntax
+resource "aws_iam_user_policy" "lb_ro" {
+  name = "test"
+  user = aws_iam_user.lb.name
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:Describe*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_user" "lb" {
+  name = "loadbalancer"
+  path = "/system/"
+}
+
+resource "aws_iam_access_key" "lb" {
+  user = aws_iam_user.lb.name
+}
+
+
+### to generate IAM policy # this tool will create a json and for now dont use the jsonencode thats from the example syntax on documentation. We will use EOF/EOD
+https://awspolicygen.s3.amazonaws.com/policygen.html
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Statement1",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AssignPrivateIpAddresses",
+        "ec2:AssignIpv6Addresses",
+        "ec2:AllocateAddress",
+        "ec2:AcceptTransitGatewayVpcAttachment"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+### our code from above examples:
+cat <<'eod' > users.tf
+### resource aws_iam_user
+resource "aws_iam_user" "dev_users" {
+  for_each = var.usernames
+  name     = each.value
+
+  tags = {
+    class = "cloud automation"
+  }
+}
+
+### resource aws_iam_user_policy
+resource "aws_iam_user_policy" "dev_users_policy" {
+  name = "dev_users_policy"
+  for_each = aws_iam_user.dev_users              # ← add this
+  
+  user = each.value.name  # ← correct reference
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Statement1",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AssignPrivateIpAddresses",
+        "ec2:AssignIpv6Addresses",
+        "ec2:AllocateAddress",
+        "ec2:AcceptTransitGatewayVpcAttachment"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+eod
+
+### users_list.auto.tfvars
+cat <<'eod' > users_list.auto.tfvars
+usernames = ["santosh", "nanda", "asif", "michael"]
+eod
+
+### variables.tf
+cat <<'eod' > variables.tf
+variable "usernames" {
+    description = "The list of usernames"
+    type = set(string)
+}
+eod
+
+root@terra:~/cloudautomation/terraform-class/aws/iam# terraform plan
+╷
+│ Error: Inconsistent dependency lock file
+│ 
+│ The following dependency selections recorded in the lock file are inconsistent with the current configuration:
+│   - provider registry.terraform.io/hashicorp/aws: required by this configuration but no version is selected
+│ 
+│ To make the initial dependency selections that will initialize the dependency lock file, run:
+│   terraform init
+╵
+root@terra:~/cloudautomation/terraform-class/aws/iam# terraform init
+Initializing the backend...
+Initializing provider plugins...
+- Finding latest version of hashicorp/aws...
+- Installing hashicorp/aws v6.35.1...
+- Installed hashicorp/aws v6.35.1 (signed by HashiCorp)
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+root@terra:~/cloudautomation/terraform-class/aws/iam# 
+
+root@terra:~/cloudautomation/terraform-class/aws/iam# terraform plan
+╷
+│ Error: Missing resource instance key
+│ 
+│   on users.tf line 14, in resource "aws_iam_user_policy" "dev_users_policy":
+│   14:   user = aws_iam_user.dev_users.name
+│ 
+│ Because aws_iam_user.dev_users has "for_each" set, its attributes must be accessed on specific instances.
+│ 
+│ For example, to correlate with indices of a referring resource, use:
+│     aws_iam_user.dev_users[each.key]
+╵
+root@terra:~/cloudautomation/terraform-class/aws/iam# terraform plan
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_iam_user.dev_users["asif"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "asif"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["michael"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "michael"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["nanda"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "nanda"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user.dev_users["santosh"] will be created
+  + resource "aws_iam_user" "dev_users" {
+      + arn           = (known after apply)
+      + force_destroy = false
+      + id            = (known after apply)
+      + name          = "santosh"
+      + path          = "/"
+      + tags          = {
+          + "class" = "cloud automation"
+        }
+      + tags_all      = {
+          + "class" = "cloud automation"
+        }
+      + unique_id     = (known after apply)
+    }
+
+  # aws_iam_user_policy.dev_users_policy["asif"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "asif"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["michael"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "michael"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["nanda"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "nanda"
+    }
+
+  # aws_iam_user_policy.dev_users_policy["santosh"] will be created
+  + resource "aws_iam_user_policy" "dev_users_policy" {
+      + id          = (known after apply)
+      + name        = "dev_users_policy"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:AssignPrivateIpAddresses",
+                          + "ec2:AssignIpv6Addresses",
+                          + "ec2:AllocateAddress",
+                          + "ec2:AcceptTransitGatewayVpcAttachment",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                      + Sid      = "Statement1"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + user        = "santosh"
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform
+apply" now.
+root@terra:~/cloudautomation/terraform-class/aws/iam# 
