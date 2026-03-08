@@ -1,0 +1,42 @@
+### we will create the s3 bucket and add the object to it
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
+
+cat <<'eod' > providers.tf
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.99.1"
+    }
+  }
+}
+
+provider "aws" {
+  # Configuration options
+}
+eod
+
+cat <<'eod' > s3.tf
+### S3 bucket
+resource "aws_s3_bucket" "s3_bucket_in_tf" {
+  bucket = "terraform-class-visualpath" ### you can see this in the mandatory parameters/argument reference
+
+  tags = {
+    Name        = "TerraformClass"
+    Environment = "Dev"
+    Cost_Center = "projectA"
+  }
+}
+### Lifecycle policy 
+resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle_config" {
+  bucket = aws_s3_bucket.s3_bucket_in_tf.id # you can reference check the id from s3 bucket documentation
+
+  rule { # rule is list of configurations and is a configuration block
+    id = "rule-1"
+
+    # ... other transition/expiration actions ...
+
+    status = "Enabled"
+  }
+}
+eod
