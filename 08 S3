@@ -1,0 +1,138 @@
+### we will create the s3 bucket and add the object to it
+To read this document you have to know state concept: SETTER VS GETTER (ARGUMNET AND ATTRIBUTE)
+CALLS
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
+
+cat <<'eod' > providers.tf
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.99.1"
+    }
+  }
+}
+
+provider "aws" {
+  # Configuration options
+}
+eod
+
+cat <<'eod' > s3.tf
+### S3 bucket
+resource "aws_s3_bucket" "s3_bucket_in_tf" {
+  bucket = "terraform-class-visualpathz" ### you can see this in the mandatory parameters/argument reference
+
+  tags = {
+    Name        = "TerraformClass"
+    Environment = "Dev"
+    Cost_Center = "projectA"
+  }
+}
+### Lifecycle policy 
+resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle_config" {
+  bucket = aws_s3_bucket.s3_bucket_in_tf.id # .id happens to equal the bucket name = terraform-class-visualpath from above resource block
+## when it comes to variables for rules, dont use it because it becomes the string. 
+## use the locals keyword to create a local variable and then use that to call it in the rule. Locals is not making the it string but is making it a alias. 
+#.eg
+# locals {
+#   log_rule = [
+#     id = "first rule"
+#     filter{
+#       prefix = "dev/"
+# expiration {
+#         days = 30     
+#    }
+#   }
+#  ]
+#}
+### to call the local variable in the rule, you can do this
+# rule = local.log_rule
+
+# rule is list of configurations and is a configuration block
+  rule { 
+    id = "my-lifecycle-rule" # this is a unique identifier for the rule
+
+    filter{
+      prefix = "dev/" # this is the prefix filter, you can specify a prefix to apply the lifecycle rule to objects with that prefix
+    }
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    # ... other transition/expiration actions ...
+    transition {
+      days          = 60
+      storage_class = "GLACIER"
+    }
+    expiration {
+      days = 365
+    }
+    status = "Enabled"
+  }
+}
+eod
+
+### apply it will create all the resources in your s3 bucket service
+root@terra:~/terraform-class/aws/s3# terraform apply
+aws_s3_bucket.s3_bucket_in_tf: Refreshing state... [id=terraform-class-visualpathz]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following
+symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle_config" {
+      + bucket                                 = "terraform-class-visualpathz"
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "my-lifecycle-rule"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + expiration {
+              + days                         = 365
+              + expired_object_delete_marker = false
+            }
+
+          + filter {
+              + prefix = "dev/"
+            }
+
+          + transition {
+              + days          = 30
+              + storage_class = "STANDARD_IA"
+            }
+          + transition {
+              + days          = 60
+              + storage_class = "GLACIER"
+            }
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Creating...
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Still creating... [00m10s elapsed]
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Still creating... [00m20s elapsed]
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Still creating... [00m30s elapsed]
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Still creating... [00m40s elapsed]
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Still creating... [00m50s elapsed]
+aws_s3_bucket_lifecycle_configuration.bucket_lifecycle_config: Creation complete after 56s [id=terraform-class-visualpathz]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroy
+
+### to upload the object ot the s3 bucket
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_object#argument-reference
