@@ -66,6 +66,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle_config" {
       days          = 120
       storage_class = "DEEP_ARCHIVE"
     }
+    expiration {
+      days = 365
+    }
     status = "Enabled"
   }
 }
