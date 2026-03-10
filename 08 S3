@@ -16,10 +16,10 @@ provider "aws" {
 }
 eod
 
-cat <<'eod' > main.tf
+cat <<'eod' > s3.tf
 ### S3 bucket
 resource "aws_s3_bucket" "s3_bucket_in_tf" {
-  bucket = "terraform-class-visualpath" ### you can see this in the mandatory parameters/argument reference
+  bucket = "terraform-class-visualpathz" ### you can see this in the mandatory parameters/argument reference
 
   tags = {
     Name        = "TerraformClass"
