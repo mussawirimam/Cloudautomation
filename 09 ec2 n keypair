@@ -144,6 +144,12 @@ resource "aws_key_pair" "my_aws_key" {
   key_name   = "terraform_class_key"
   public_key = "tls_private_key.web-private-key.public_key_openssh" ## 2 public key is being added from the tls_private_key as the input
 }
+
+## 4th we are outputting the private key that we created using the tls provider using local_file resource
+resource "local_file" "private_key_file" {
+  content  = tls_private_key.my-key-pair.private_key_pem
+  filename = "my-aws-key.pem"
+}
 eod
 
 
