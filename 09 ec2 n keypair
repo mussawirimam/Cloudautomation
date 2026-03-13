@@ -184,3 +184,17 @@ Private Key  →  the key     keep secret     you keep it
 
 lose private key  =  locked out forever
 share private key =  anyone can get in ⚠️
+
+
+🏭
+TLS_PRIVATE_KEY
+GENERATES KEYS
+🔒
+AWS_KEY_PAIR
+LOCK GOES TO AWS
+🖥️
+AWS_INSTANCE
+EC2 GETS THE LOCK
+🔑
+LOCAL_FILE
+KEY SAVED TO YOU
