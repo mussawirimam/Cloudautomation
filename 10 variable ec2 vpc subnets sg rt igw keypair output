@@ -1,0 +1,31 @@
+### this is a complete architecture Project in which we will create 
+### we will create the ec2 with and give a public ip address to it. vpc and inside it a subnet in which the ec2 instance will exist, security group for the instances to allow the ssh ingress (inbout rule) on port 22. As well, we will create the route table to allow the flow between the networks and to the internetgateway, and we will create a gateway to internet. 
+Complete AWS Architecture Project
+In this project we will build a fully connected AWS environment from scratch using Terraform. The architecture consists of the following components:
+Network Layer:
+
+A VPC to define our private network boundary
+A Subnet inside the VPC where our EC2 instance will live
+An Internet Gateway (IGW) attached to the VPC to allow internet connectivity
+A Route Table with a route pointing 0.0.0.0/0 to the IGW, associated to the subnet to allow traffic flow between the subnet and the internet
+
+Security Layer:
+
+A Security Group attached to the EC2 instance with an inbound (ingress) rule allowing SSH on port 22
+
+Compute Layer:
+
+An EC2 Instance placed inside the subnet, assigned a public IP address so it can be reached from the internet
+
+
+The full dependency chain looks like this:
+VPC
+ ├── Subnet
+ ├── Internet Gateway
+ ├── Route Table (0.0.0.0/0 → IGW)
+ │    └── Associated to Subnet
+ ├── Security Group (allow SSH port 22)
+ └── EC2 Instance
+      ├── placed in Subnet
+      ├── attached to Security Group
+      └── assigned Public IP
