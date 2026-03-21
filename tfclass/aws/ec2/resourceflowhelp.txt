@@ -1,0 +1,8 @@
+1. vpc.tf          → everything lives inside it
+2. igw.tf          → needs VPC to attach to
+3. subnet.tf       → needs VPC to exist first
+4. routetable.tf   → needs IGW + subnet to associate
+5. securitygroup.tf → needs VPC id
+6. ec2.tf          → needs subnet + security group ids
+
+Each resource depends on the one above it — Terraform handles this automatically via references like aws_vpc.myvpc.id, but this is the logical creation order.
