@@ -1,14 +1,15 @@
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance#argument-reference
 #https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key#public_key_pem-1
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair
-
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/instance ### getting associate_public_ip from the data source of aws_instance
 resource "aws_instance" "web" {
   ami           = "ami-0b6c6ebed2801a5cb" # you can find this in the documentation of aws_instance resource, or you can search for it in the AWS console
   instance_type = "t3.micro"
   ## 3 we are getting the key name as input from the aws_key_pair resource that we created below
   key_name = aws_key_pair.my_aws_key.key_name   ## 3 we are getting the key name as input from the aws_key_pair resource that we created below
-  
-
+  vpc_security_group_ids = [aws_security_group.securitygroup_allow_ssh.id] ## we are getting the security group id as input from the aws_security_group resource that we created below
+  subnet_id = aws_subnet.mysubnet.id
+  associate_public_ip_address = true ## we are associating public IP to the instance that we are creating
   tags = {
     Name = "HelloWorld"
   }
