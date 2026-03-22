@@ -10,6 +10,16 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.securitygroup_allow_ssh.id] ## we are getting the security group id as input from the aws_security_group resource that we created below
   subnet_id = aws_subnet.mysubnet.id
   associate_public_ip_address = true ## we are associating public IP to the instance that we are creating
+  user_data = <<EOF
+  #!/bin/bash
+  yum update -y
+  yum install httpd -y
+  service httpd start
+  chkconfig httpd on
+  cd /var/www/html
+  echo "<html><h1>Hello Cloud Gurus Welcome To My Webpage</h1></html>" > index.html
+EOF
+
   tags = {
     Name = "HelloWorld"
   }
