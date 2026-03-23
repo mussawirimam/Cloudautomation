@@ -16,16 +16,19 @@ output "my_pet_name" {
   value = random_pet.mypetname.id
 }
 eod
--------------------------------
-VARIABLES: 
+============================================
+METHODS OF PASSING VARIABLES:
+============================================
 variables can be passed through these methods:
 - default value
 CLI:
+------------
 - promted value in CLI
 - pass it via CLI as -var
 terraform plan -var="variablename=value"
 
 ENV VARIABLE:
+------------
 - Input the value for a variable via system environment variable
 export TF_VAR_<variableName>=<value>
 
@@ -34,10 +37,12 @@ to unset,
 unset TF_VAR_<variableName>
 
 FILE:
+------------
 - How to supply the input values via file
 terraform plan -var-file=<filename.tfvars>
 
 AUTO-SUPPLY INPUTS VIA FILE:
+------------------------------------
 - how to auto supply the input values via file
 create a file with the extension of auto.tfvars
 
