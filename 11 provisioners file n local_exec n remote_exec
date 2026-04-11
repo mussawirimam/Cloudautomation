@@ -1,0 +1,4 @@
+### we have seen file provisioner. We will also see the local_exec and remote_exec provisioners below.
+[text](https://developer.hashicorp.com/terraform/language/provisioners)
+
+### what if I want to copy the file from the local machine to the remote machine? you will have to use the remote-exec provisioner for that
