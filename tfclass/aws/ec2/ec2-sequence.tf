@@ -37,6 +37,7 @@ resource "aws_instance" "web" {                                               ##
       user        = "ubuntu"
       host        = self.public_ip
       private_key = tls_private_key.my-key-pair.private_key_pem              ## 5b - gets private key from tls_private_key (step 1)
+#     private_key = file("my-aws-key.pem")                                           ## 5b alternative - gets private key from local file (step 3)      
     }
   }
 }
