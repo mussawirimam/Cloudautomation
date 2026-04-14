@@ -28,10 +28,6 @@ resource "aws_instance" "web" {                                               ##
     Name = "HelloWorld"
   }
 
-  provisioner "file" {                                                        ## 5 - after EC2 is up, copies nginx.conf from local machine → /tmp/index.html
-    source      = "nginx.conf"
-    destination = "/tmp/index.html"
-
     connection {                                                              ## 5a - SSH connection used by provisioner
       type        = "ssh"
       user        = "ubuntu"
@@ -39,6 +35,10 @@ resource "aws_instance" "web" {                                               ##
       private_key = tls_private_key.my-key-pair.private_key_pem              ## 5b - gets private key from tls_private_key (step 1)
 #     private_key = file("my-aws-key.pem")                                           ## 5b alternative - gets private key from local file (step 3)      
     }
+
+  provisioner "file" {                                                        ## 5 - after EC2 is up, copies nginx.conf from local machine → /tmp/index.html
+    source      = "nginx.conf"
+    destination = "/tmp/index.html"
   }
 }
 
