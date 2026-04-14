@@ -2,3 +2,10 @@
 [text](https://developer.hashicorp.com/terraform/language/provisioners)
 
 ### what if I want to copy the file from the local machine to the remote machine? you will have to use the remote-exec provisioner for that
+
+There are three types of provisioners
+Note: do not confuse local_file resource with the file provisioner
+
+1: file provisioner
+2: local-exec provisioner
+3: remote-exec provisioner
