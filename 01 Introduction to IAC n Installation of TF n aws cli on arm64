@@ -89,6 +89,15 @@ AWS Secret Access Key [asdafsafdafsd]: <paste>
 Default region name [us-east-1]: enter
 Default output format [json]: enter
 
+9. make sure your account is connected
+run command: aws sts get-caller-identity
+root@terra:~/terraform-class/aws/ec2# aws sts get-caller-identity
+{
+    "UserId": "dafsadfsdfasafdsdfsafsdPfads",
+    "Account": "333519902194",
+    "Arn": "arn:aws:iam::333519902194:user/terraform-santhosh"
+}
+root@terra:~/terraform-class/aws/ec2# 
 
 
 NOW WHAT? 
