@@ -60,8 +60,35 @@ uname -m
 You should see:
 aws-cli/2.x.x Python/... Linux/aarch64
 aarch64
-5. Configure credentials
-aws configure
+
+5. IAM role and new terraform user
+click on the create a new user, name it terraform-santhosh. 
+check unmark on "provide user access to the AWS Management Console access"
+give it AdministratorAccess permissions policies
+click on create user
+
+6. giving terraform-santhosh Programmatic access
+click on Security credential in the santhosh-terraform user profile in IAM>Users> terraform Santhosh
+scroll down and click on create access key
+use case: click command line interface (cli)
+scroll down check mark "I understand the above recommendation..."
+click next
+
+7. copy the access key 
+copy access key 
+copy secret access key
+store it somewhere safe
+
+
+8. Configure credentials in your server cli
+go to your terminal
+run command: aws configure
+   - will give a prompt to enter your credential in your terminal:
+AWS Acess Key ID [lkjsdaflkjskdlaf]: give your access key here <sfadsfdasdfafsda>
+AWS Secret Access Key [asdafsafdafsd]: <paste>
+Default region name [us-east-1]: enter
+Default output format [json]: enter
+
 
 
 NOW WHAT? 
