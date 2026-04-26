@@ -1,3 +1,4 @@
+############################ BACKEND CONFIGURATION ############################  
 The reason we use a backend configuration is so that the statefile is not generated locally when planning or applying tf codes. 
 This is to secure the terraform state configuration file on a remote location instead of storing it locally on the users machine. 
 This way you ensure that Statefile will not get corrupted or the corporate information will not be stolen. It is as well a best practice. 
@@ -27,3 +28,5 @@ If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 root@terra:~/terraform-class/aws/s3# 
+
+############################ STATELOCK ############################  
