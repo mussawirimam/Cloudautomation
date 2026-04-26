@@ -1,14 +1,13 @@
 ############################ BACKEND CONFIGURATION ############################  
+official documentation for backend configuration: https://developer.hashicorp.com/terraform/language/backend
+
+REASON FOR USING BACKEND CONFIGURATION:-
 The reason we use a backend configuration is so that the statefile is not generated locally when planning or applying tf codes. 
 This is to secure the terraform state configuration file on a remote location instead of storing it locally on the users machine. 
 This way you ensure that Statefile will not get corrupted or the corporate information will not be stolen. It is as well a best practice. 
 In our case we are storing backend configuration to s3 bucket. 
 
-Backend configuration: 
-https://developer.hashicorp.com/terraform/language/state/backends
-
-backend configuration is used for the 
-
+EX1
 when you run a terraform init, on your console it will state 
 initializing the backend
 e.x:
