@@ -32,7 +32,8 @@ sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update
 sudo apt install terraform
 
-OR MANUAL INSTALLATION
+OR MANUAL INSTALLATION:
+-----------------------
 wget https://releases.hashicorp.com/terraform/1.0.10/terraform_1.0.10_linux_arm64.zip
 sudo apt install -y unzip
 unzip terraform_1.0.10_linux_arm64.zip
