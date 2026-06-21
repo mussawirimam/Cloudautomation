@@ -1,4 +1,4 @@
-### steps to create the dedicated Terraform user
+### steps to create the dedicated Terraform user and attach AdministratorAccess policy
 Step 1 (create user): 
 click on IAM Users > click create user (give user name [terraform-santosh]) > click next
 Step 2 (Set permissions):
