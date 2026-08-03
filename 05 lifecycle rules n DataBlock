@@ -561,7 +561,8 @@ cat <<'eod' > mytext.txt
 This is from mytext.txt file
 eod
 
-### so we have created the file, now how to read the contents of it? We will use a DATABLOCK in our code to read the contents of the mytext.txt file 
+### so we have created the file, now how to read the contents of it? 
+We will use a DATABLOCK in our code to read the contents of the mytext.txt file 
 
 cat <<'eod' > main.tf 
 ### resource
