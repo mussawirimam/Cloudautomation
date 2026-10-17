@@ -1,3 +1,12 @@
+Q: Why we use the backend configuration? 
+--------------------------------------
+A: Terraform backend configuration tells Terraform where to store its state file—the record connecting your code to the real resources in AWS.
+A remote backend, such as S3, helps you:
+- Share state between your laptop, Jenkins, and teammates.
+- Lock state when configured, preventing conflicting deployments.
+- Keep state centrally stored, independent of your laptop.
+Analogy: Your Terraform code is the blueprint; state is the inventory; the backend is where you keep that inventory.
+
 ############################ BACKEND CONFIGURATION ############################  
 official documentation for backend configuration: https://developer.hashicorp.com/terraform/language/backend
 
