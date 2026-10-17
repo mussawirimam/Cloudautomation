@@ -1,0 +1,22 @@
+### make sure you delete the first s3.tf and replace the code in s3.tf with this or else it wont work. And its a dummy file, you will have 
+### to make and correct the changes
+terraform {
+  backend "s3" {
+    bucket = "my-existing-terraform-state-bucket"
+    key    = "terraform-class/terraform.tfstate"
+    region = "us-east-1" # Region of the state bucket
+  }
+}
+
+# Your existing resources stay below
+resource "aws_s3_bucket" "s3_bucket_in_tf" {
+  bucket = "terraform-class-visualpathz"
+
+  tags = {
+    Name        = "TerraformClass"
+    Environment = "Dev"
+    Cost_Center = "projectA"
+  }
+}
+
+# Your lifecycle configuration stays as written
