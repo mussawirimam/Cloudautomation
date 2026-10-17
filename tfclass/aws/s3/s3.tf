@@ -50,4 +50,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle_config" {
     }
     status = "Enabled"
   }
+
+### Terraform backend configuration
+# terraform {
+#   backend "s3" {
+#     bucket = "terraform-class-visualpath-state"
+#     key    = "terraform-class/terraform.tfstate"
+#     region = "us-east-1"
+#   }
+# }
 }
